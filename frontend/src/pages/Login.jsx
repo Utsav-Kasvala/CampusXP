@@ -1,106 +1,109 @@
-//import React from 'react'
-
-import { useState, useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { BASE_URL } from "../config"
-import { authContext } from "../context/AuthContext"
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../config";
+import { authContext } from "../context/AuthContext";
 
 const Login = () => {
-  const [formdata, setFormData] = useState({
-    email:'',
-    password:'',
-  })
+    const [formdata, setFormData] = useState({
+        email: '',
+        password: '',
+    });
 
-  const [loading,setLoading] =useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { dispatch } = useContext(authContext); // Context for authentication
 
-  const navigate = useNavigate();
+    const handleInputChange = (e) => {
+        setFormData({ ...formdata, [e.target.name]: e.target.value });
+    };
 
-  const {dispatch} =useContext(authContext) // ahiya thi start kaevanu che
+    const submitHandler = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        setError(''); // Reset error message before making a new request
 
-  const handleInputChange= e=>{
-    setFormData({...formdata, [e.target.name]:e.target.value})
-  }
+        try {
+            const res = await fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formdata)
+            });
 
-  const submitHandler = async event =>{
-    //console.log(formdata)
-    event.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch(`${BASE_URL}/auth/login`,{
-        method: 'post',
-        headers:{
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formdata)
-      })
+            const result = await res.json();
 
-      const result = await res.json()
+            if (!res.ok) {
+                throw new Error(result.message);
+            }
 
-      if(!res.ok){
-        throw new Error(result.message)
-      }
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: {
+                    user: result.data,
+                    token: result.token,
+                    role: result.role,
+                },
+            });
+            console.log(result, "login data");
 
-      dispatch({
-        type:'LOGIN_SUCCESS',
-        payload:{
-          user: result.data,
-          token: result.token,
-          role:result.role,
-        },
-      })
-     console.log(result,"login data");
+            setLoading(false);
 
-      setLoading(false)
-      
-      {result.role=="student" && navigate('/studentdashboard')}
-      {result.role=="professor" && navigate('/professordashboard')}
+            // Redirect based on user role
+         //   console.log(result.data.role);
+            if (result.data.role === "student") {
+              //console.log("hi\n");
+                navigate('/studentdashboard');
+            } else if (result.data.role === "professor") {
+                navigate('/professordashboard');
+            }
+        } catch (err) {
+            setLoading(false);
+            setError(err.message || 'Something went wrong. Please try again.'); // Set error message
+        }
+    };
 
-    } catch (err) {
-      
-      setLoading(false)
-    }
-  }
-
-  return (
-    
-
-
+    return (
         <form className="py-4 md:py-0" onSubmit={submitHandler}>
-        <div className="mb-5">
-          <input 
-          type="email" 
-          placeholder="Enter Your Email" 
-          name="email" 
-          value={formdata.email} 
-          onChange={handleInputChange}
-          required
-          />
-        </div>
+            <div className="mb-5">
+                <input
+                    type="email"
+                    placeholder="Enter Your Email"
+                    name="email"
+                    value={formdata.email}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
 
-        <div className="mb-5">
-          <input 
-          type="password" 
-          placeholder="Password" 
-          name="password" 
-          value={formdata.password} 
-          onChange={handleInputChange}
-          required
-          />
-        </div>
+            <div className="mb-5">
+                <input
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value={formdata.password}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
 
-        <div className="mt-7 flex  flex-col items-center justify-center">
-        <button
-           disabled={loading && true}
-           type="submit" >
-           Submit
-          </button>
-          
-        </div>
+            {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
 
-        <p > Don&apos;t have an Account? 👉<Link to='/Register'> Register</Link></p>
-      </form>
-      
-  )
-}
+            <div className="mt-7 flex flex-col items-center justify-center">
+                <button
+                    disabled={loading}
+                    type="submit"
+                >
+                    {loading ? 'Loading...' : 'Submit'} {/* Show loading state */}
+                </button>
+            </div>
 
-export default Login
+            <p>
+                Don&apos;t have an Account? 👉 <Link to='/register'>Register</Link>
+            </p>
+        </form>
+    );
+};
+
+export default Login;
