@@ -5,6 +5,7 @@ import dotenv from 'dotenv'; // Import dotenv
 import cors from 'cors'; // Import CORS
 import authRoutes from './routes/Authroutes.js'; // Adjust according to your file structure
 import classroomRoutes from './routes/ClassroomRoutes.js';
+import TimeTableRoutes from './routes/TimeTableRoutes.js'
 dotenv.config(); // Load environment variables
 
 const app = express();
@@ -13,7 +14,8 @@ const app = express();
 app.use(cors()); // Enable CORS
 app.use(express.json());
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/classrooms', classroomRoutes); 
+app.use('/api/v1/classrooms', classroomRoutes);
+app.use('/api/v1/timeTable',TimeTableRoutes); 
 //app.use("/api", studentRoutes);
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)

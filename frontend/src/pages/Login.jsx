@@ -2,9 +2,10 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../config";
 import { authContext } from "../context/AuthContext";
+import loginImg from '../assets/images/login.gif'
 
 const Login = () => {
-  const [formdata, setFormData] = useState({
+  const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
@@ -16,7 +17,7 @@ const Login = () => {
   const { dispatch } = useContext(authContext);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formdata, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const submitHandler = async (event) => {
@@ -30,7 +31,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formdata),
+        body: JSON.stringify(formData),
       });
 
       const result = await res.json();
@@ -66,44 +67,64 @@ const Login = () => {
   };
 
   return (
-    <form className="py-4 md:py-0" onSubmit={submitHandler}>
-      {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
-
-      <div className="mb-5">
-        <input
-          type="email"
-          placeholder="Enter Your Email"
-          name="email"
-          value={formdata.email}
-          onChange={handleInputChange}
-          required
+    <section className="flex h-screen ">
+      {/* Left Image Section */}
+      <div className="hidden lg:block w-1/2 ">
+        <img
+          src={loginImg}
+          alt="Login"
+          className="w-full h-full object-cover mt-28"
+          style={{ maxWidth: '680px', maxHeight: '428px' }}
         />
       </div>
+        
 
-      <div className="mb-5">
-        <input
-          type="password"
-          placeholder="Password"
-          name="password"
-          value={formdata.password}
-          onChange={handleInputChange}
-          required
-        />
+      {/* Right Login Form Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-100 p-6">
+        <div className="max-w-md w-full">
+         
+          <h3 className="text-4xl font-bold mb-6 text-center">Login to Your Account</h3>
+          <form onSubmit={submitHandler} className="bg-white p-8 rounded-lg shadow-md space-y-4">
+          {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
+            <div className="mb-5">
+              <input
+                type="email"
+                placeholder="Enter Your Email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            <div className="mb-5">
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            <div className="mt-7">
+              <button
+                disabled={loading} // Disable button when loading
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-800 transition duration-300"
+              >
+               {loading ? "Loading..." : "Submit"} {/* Show loading text */}
+              </button>
+            </div>
+
+            <p className="mt-4 text-center">Don&apos;t have an Account? 👉 <Link to='/Register' className="text-blue-500">Register</Link></p>
+          </form>
+        </div>
       </div>
-
-      <div className="mt-7 flex flex-col items-center justify-center">
-        <button
-          disabled={loading} // Disable button when loading
-          type="submit"
-        >
-          {loading ? "Loading..." : "Submit"} {/* Show loading text */}
-        </button>
-      </div>
-
-      <p>
-        Don&apos;t have an Account? 👉<Link to='/Register'> Register</Link>
-      </p>
-    </form>
+    </section>
   );
 };
 

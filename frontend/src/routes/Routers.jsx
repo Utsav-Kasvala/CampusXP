@@ -13,6 +13,7 @@ import SubjectDetails from '../pages/Subject';
 import CreateClassroom from '../components/CreateClassroom';
 import CreatedClasses from '../components/CreatedClassroom';
 import SubjectDetail from '../pages/SubjectByProfessor';
+import TimeTable from '../components/TimeTable';
 const Routers = () => {
     return (
         <Routes>
@@ -29,6 +30,7 @@ const Routers = () => {
             <Route path="/professor/create-class" element={<CreateClassroom />} /> {/* Route to CreateClassroom */}
             <Route path="/subject/:subjectName" component={SubjectDetails} /> {/* Route for subject details */}
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
+            <Route path="/timeTable" element={<TimeTable/>}/>
         </Routes>
     );
 };

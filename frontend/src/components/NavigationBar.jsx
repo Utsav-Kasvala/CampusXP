@@ -8,6 +8,7 @@ const NavigationBar = () => {
       <Link to="/join-classroom" style={{ margin: '0 15px' }}>Join Classroom</Link>
       <Link to="/leaderboard" style={{ margin: '0 15px' }}>Leaderboard</Link>
       <Link to="/joined-classrooms" style={{ margin: '0 15px' }}>Joined Classrooms</Link>
+      <Link to="/timeTable" style={{ margin: '0 15px' }}>TimeTable</Link>
     </nav>
   );
 };
