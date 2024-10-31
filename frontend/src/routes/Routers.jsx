@@ -10,6 +10,9 @@ import ProfessorDashboard from '../components/ProfessorDashboard';
 import JoinClassroom from '../pages/JoinClassroom'; // Import the JoinClassroom component
 import JoinedClassrooms from '../pages/JoinedClassrooms'; // Import the JoinedClassrooms component
 import SubjectDetails from '../pages/Subject';
+import CreateClassroom from '../components/CreateClassroom';
+import CreatedClasses from '../components/CreatedClassroom';
+import SubjectDetail from '../pages/SubjectByProfessor';
 const Routers = () => {
     return (
         <Routes>
@@ -21,6 +24,9 @@ const Routers = () => {
             <Route path="/professordashboard" element={<ProtectedRoute allowedRoles={['professor']}><ProfessorDashboard /></ProtectedRoute>} />
             <Route path="/join-classroom" element={<JoinClassroom />} /> {/* Add the new route */}
             <Route path="/classrooms" component={JoinedClassrooms} />
+            <Route path="/professor/classrooms" element={<CreatedClasses/>} />
+            <Route path="/professor/subject/:subjectName" element={<SubjectDetail/>} />
+            <Route path="/professor/create-class" element={<CreateClassroom />} /> {/* Route to CreateClassroom */}
             <Route path="/subject/:subjectName" component={SubjectDetails} /> {/* Route for subject details */}
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
         </Routes>
