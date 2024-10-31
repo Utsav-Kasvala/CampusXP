@@ -161,6 +161,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 // Set up the initial state with safe checks for localStorage
 const initialState = {
     user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+    //user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
     role: localStorage.getItem('role') || null,
     token: localStorage.getItem('token') || null,
     studentId: localStorage.getItem('studentId') || null, // Add studentId to initial state
@@ -170,12 +171,14 @@ const initialState = {
 export const authContext = createContext(initialState);
 
 // Auth reducer function
+// Auth reducer function
 const authReducer = (state, action) => {
     switch (action.type) {
         case 'LOGIN_START':
             return {
                 ...state,
                 isLoading: true, // Set loading state
+                
             };
 
         case "LOGIN_SUCCESS":
@@ -201,6 +204,7 @@ const authReducer = (state, action) => {
     }
 };
 
+// Auth Context Provider
 // Auth Context Provider
 export const AuthContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, initialState);

@@ -28,6 +28,7 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for unique studentId
 
+
 const StudentSchema = new mongoose.Schema({
   // Unique student identifier, auto-generated if not provided
   studentId: { 
