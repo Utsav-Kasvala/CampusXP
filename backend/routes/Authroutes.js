@@ -1,10 +1,12 @@
-import express from 'express'
-import { register,login } from '../Controllers/AuthController.js'
+// routes/userRoutes.js
 
-const router=express.Router()
+import express from 'express';
+import { register, login } from '../Controllers/AuthController.js';
 
-router.post('/register',register)
-router.post('/login',login)
+const router = express.Router();
 
+// Routes
+router.post('/register', register);
+router.post('/login', login);
 
-export default router
+export default router;

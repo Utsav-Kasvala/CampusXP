@@ -1,45 +1,27 @@
-import express from "express"
-import cookieParser from "cookie-parser"
-import mongoose from "mongoose"
-import dotenv from "dotenv"
-import cors from "cors"
-import AuthRoutes from './routes/Authroutes.js'
-dotenv.config()
+//import studentRoutes from "./routes/studentRoutes.js";
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv'; // Import dotenv
+import cors from 'cors'; // Import CORS
+import authRoutes from './routes/Authroutes.js'; // Adjust according to your file structure
+import classroomRoutes from './routes/ClassroomRoutes.js';
+dotenv.config(); // Load environment variables
 
-const app = express()
-const port = process.env.PORT || 8000
+const app = express();
 
-const corsOptions={
-    origin:true
-};
+// Middleware
+app.use(cors()); // Enable CORS
+app.use(express.json());
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/classrooms', classroomRoutes); 
+//app.use("/api", studentRoutes);
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
-app.get('/',(req,res)=>{
-    res.send("API is Working");
-});
-
-mongoose.get('strictQuery',false)
-
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URL);
-        console.log('MongoDB database connected');
-    } catch (err) {
-        console.error('MongoDB database not connected:', err);
-    }
-};
-
-
-
-
-
-app.use(express.json());  
-app.use(cookieParser());
-app.use(cors(corsOptions));
-
-app.use('/api/v1/auth',AuthRoutes);
-
-connectDB();
-
-app.listen(port,()=>{
-    console.log("Server is running on port" +port)
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
