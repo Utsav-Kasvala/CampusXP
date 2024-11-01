@@ -23,11 +23,9 @@ const JoinClassroom = () => {
             });
 
             setMessage('Joined classroom successfully!'); // Success message
-            // await axios.put(`${import.meta.env.VITE_API_BASE_URL}/students/${studentId}/add-classroom`, {
-            //     classroomId: response.data.classroomId // Assuming the response contains the classroomId
-            // });
-            
-            // Additional actions or redirects can go here if needed
+
+            // Optionally, redirect or perform additional actions
+            // navigate(`/some-page`);
         } catch (error) {
             // Error handling for various cases
             console.log(error);
@@ -40,22 +38,28 @@ const JoinClassroom = () => {
     };
 
     return (
-        <div>
-            <h2>Join Classroom</h2>
+        <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md mt-10">
+            <h2 className="text-2xl font-bold mb-4 text-center">Join Classroom</h2>
             {/* Display the student's name */}
-            <p>Student Name: {user?.name}</p>
-            <form onSubmit={handleJoin}>
+            <p className="text-lg mb-4 text-center">Student Name: {user?.name}</p>
+            <form onSubmit={handleJoin} className="flex flex-col">
                 <input 
                     type="text" 
                     placeholder="Enter Classroom Code" 
                     value={code} 
                     onChange={(e) => setCode(e.target.value)} 
                     required 
+                    className="border border-gray-300 rounded p-2 mb-4"
                 />
-                <button type="submit">Join</button>
+                <button 
+                    type="submit" 
+                    className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                >
+                    Join
+                </button>
             </form>
             {/* Display any message (success or error) */}
-            {message && <p>{message}</p>}
+            {message && <p className={`mt-4 text-center ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
         </div>
     );
 };

@@ -31,7 +31,7 @@ const authReducer = (state, action) => {
                 isLoading: false, // Reset loading state on success
             };
 
-        case 'LOGOUT':
+        case "LOGOUT":
             return {
                 user: null,
                 role: null,

@@ -20,7 +20,6 @@ const AttendancePage = () => {
         fetchAttendance();
     }, [attendanceId]);
 
-    // Handle attendance toggle for each student
     const handleAttendanceChange = (studentId, isPresent) => {
         setAttendance(prevAttendance => ({
             ...prevAttendance,
@@ -30,7 +29,6 @@ const AttendancePage = () => {
         }));
     };
 
-    // Submit updated attendance
     const handleSubmit = async () => {
         try {
             const response = await axios.patch(
@@ -44,32 +42,58 @@ const AttendancePage = () => {
     };
 
     return (
-        <div>
-            <h1>Take Attendance for Session</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+            <h1 className="text-2xl font-bold mb-4">Take Attendance for Session</h1>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
             {attendance ? (
-                <div>
-                    <h2>Date: {new Date(attendance.date).toLocaleDateString()}</h2>
-                    <ul>
+                <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6">
+                    <h2 className="text-lg font-semibold mb-4">
+                        Date: {new Date(attendance.date).toLocaleDateString()}
+                    </h2>
+                    <ul className="space-y-4">
                         {attendance.students.map(student => (
-                            <li key={student.studentId}>
-                                <span>{student.name}</span>
-                                <button onClick={() => handleAttendanceChange(student.studentId, true)}>
-                                    Present
-                                </button>
-                                <button onClick={() => handleAttendanceChange(student.studentId, false)}>
-                                    Absent
-                                </button>
-                                <span>{student.present ? 'Present' : 'Absent'}</span>
+                            <li
+                                key={student.studentId}
+                                className="flex justify-between items-center p-4 bg-gray-50 border rounded-lg"
+                            >
+                                <span className="font-medium">{student.name}</span>
+                                <div className="space-x-2">
+                                    <button
+                                        onClick={() => handleAttendanceChange(student.studentId, true)}
+                                        className={`px-4 py-2 rounded ${
+                                            student.present ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'
+                                        } hover:bg-green-600`}
+                                    >
+                                        Present
+                                    </button>
+                                    <button
+                                        onClick={() => handleAttendanceChange(student.studentId, false)}
+                                        className={`px-4 py-2 rounded ${
+                                            !student.present ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-600'
+                                        } hover:bg-red-600`}
+                                    >
+                                        Absent
+                                    </button>
+                                </div>
+                                <span
+                                    className={`font-semibold ${
+                                        student.present ? 'text-green-600' : 'text-red-600'
+                                    }`}
+                                >
+                                    {student.present ? 'Present' : 'Absent'}
+                                </span>
                             </li>
                         ))}
                     </ul>
-                    <button onClick={handleSubmit} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'blue', color: 'white', border: 'none', borderRadius: '4px' }}>
+                    <button
+                        onClick={handleSubmit}
+                        className="mt-6 w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+                    >
                         Submit
                     </button>
                 </div>
             ) : (
-                <p>Loading...</p>
+                <p className="text-gray-500">Loading...</p>
             )}
         </div>
     );
