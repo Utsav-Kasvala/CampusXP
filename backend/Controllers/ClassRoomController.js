@@ -3,6 +3,7 @@ import Classroom from '../models/Classroom.js';
 import Student from '../models/Student.js'; // Import the Student model
 import { v4 as uuidv4 } from 'uuid';
 import Professor from '../models/Professor.js';
+
 export const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch((error) => {
         console.error('Error occurred:', error);
@@ -127,3 +128,24 @@ export const Default=asyncHandler(async (req, res) => {
     const classrooms = await Classroom.find();
     res.status(200).json(classrooms);
 });
+
+
+export const getStudentsByJoinCode = async (req, res) => {
+    const { joinCode } = req.params;
+   
+    
+    try {
+        // Find the classroom by joinCode
+        const classroom = await Classroom.findOne({ joinCode }).populate('students', 'name email'); // Populate students with selected fields
+
+        if (!classroom) {
+            return res.status(404).json({ message: 'Classroom not found' });
+        }
+
+        // Send the list of students as response
+        res.status(200).json({ students: classroom.students });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to fetch students' });
+    }
+};

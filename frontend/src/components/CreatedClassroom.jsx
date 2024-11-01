@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { authContext } from '../context/AuthContext';
 import axios from 'axios';
 
 const CreatedClasses = () => {
     const { professorId } = useParams();
-    const { user } = useContext(authContext); // Get user info from context
+    const { user } = useContext(authContext);
     const [classrooms, setClassrooms] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchClassrooms = async () => {
@@ -22,6 +23,20 @@ const CreatedClasses = () => {
 
         fetchClassrooms();
     }, [user.professorId]);
+
+    // Redirect to AttendancePage with joinCode as parameter
+    const handleTakeAttendance = async (joinCode) => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/attendance/create/${joinCode}`);
+            const attendanceId = response.data.attendanceId;
+
+            // Redirect to the attendance page with the new attendance ID and joinCode
+            navigate(`/professor/attendance/${joinCode}/${attendanceId}`);
+        } catch (error) {
+            console.error("Failed to create attendance:", error);
+            setError("Could not create attendance. Please try again.");
+        }
+    };
 
     return (
         <div>
@@ -41,6 +56,14 @@ const CreatedClasses = () => {
                             <p><strong>Credits:</strong> {classroom.credits}</p>
                             <p><strong>Professor:</strong> {user.name || "Not Available"}</p>
                             <p><strong>Join Code:</strong> {classroom.joinCode}</p>
+                            <button onClick={() => handleTakeAttendance(classroom.joinCode)} style={{ marginTop: '10px', padding: '8px 12px', backgroundColor: 'green', color: 'white', border: 'none', borderRadius: '4px' }}>
+                                Take Attendance
+                            </button>
+                            <Link to={`/professor/attendance/${classroom.joinCode}`}>
+                                <button style={{ marginTop: '10px', padding: '5px 10px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px' }}>
+                                    Show Attendance
+                                </button>
+                            </Link>
                         </li>
                     ))}
                 </ul>

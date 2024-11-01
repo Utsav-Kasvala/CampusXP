@@ -14,6 +14,8 @@ import CreateClassroom from '../components/CreateClassroom';
 import CreatedClasses from '../components/CreatedClassroom';
 import SubjectDetail from '../pages/SubjectByProfessor';
 import TimeTable from '../components/TimeTable';
+import Attendance from '../components/Attendance'
+import ShowAttendance from '../components/ShowAttendance'
 const Routers = () => {
     return (
         <Routes>
@@ -31,6 +33,8 @@ const Routers = () => {
             <Route path="/subject/:subjectName" component={SubjectDetails} /> {/* Route for subject details */}
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
             <Route path="/timeTable" element={<TimeTable/>}/>
+            <Route path="/professor/attendance/:joinCode" element={<ShowAttendance />} />
+            <Route path="/professor/attendance/:joinCode/:attendanceId" element={<Attendance />} />
         </Routes>
     );
 };
