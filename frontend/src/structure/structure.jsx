@@ -5,11 +5,14 @@ import Routers from '../routes/Routers'
 const Structure = () => {
   return (
     <>
+    <div className="min-h-screen flex flex-col">
     <Header/>
     <main>
         <Routers/>
     </main>
     <Footer/>
+    </div>
+    
 
     </>
   )

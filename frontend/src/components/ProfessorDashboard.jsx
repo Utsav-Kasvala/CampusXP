@@ -5,7 +5,7 @@ const ProfessorDashboard = () => {
     const { user } = useContext(authContext);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6 mt-20">
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                 <h1 className="text-3xl font-bold text-blue-600 mb-6 text-center">Professor Dashboard</h1>
 
