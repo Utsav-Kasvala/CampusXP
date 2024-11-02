@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 const timetableSchema = new mongoose.Schema({
-  day: { type: String, required: true },
-  subject: { type: String, required: true },
-  time: { type: String, required: true }
+  day: { type: String },
+  time: { type: String },
+  entry: { type: String},
+  userId: {type: String}  // To link entries with specific users
 });
 
 export default mongoose.model("TimeTableSch", timetableSchema);

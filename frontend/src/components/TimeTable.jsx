@@ -1,117 +1,162 @@
-import React, { useEffect, useState } from 'react';
-import { BASE_URL } from '../../config';
-import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { authContext } from '../context/AuthContext';
+import { BASE_URL, token } from '../config';
+import { FaTrash } from 'react-icons/fa';
 
-function TimeTable() {
-  const [timetable, setTimetable] = useState([]);
-  const [newEntry, setNewEntry] = useState({ day: '', subject: '', time: '' });
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
+const API_URL = `${BASE_URL}/timeTable`;
+// const user=localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 
-  // Fetch timetable data on component mount
-  // {
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // }
+function Timetable() {
+  const [entries, setEntries] = useState({});
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [newEntry, setNewEntry] = useState('');
+  const { user } = useContext(authContext);
+  const userId = user.studentId;
+
   useEffect(() => {
-    axios.get(`${BASE_URL}/timeTable`).then((res) => setTimetable(res.data));
-  }, []);
+    const fetchEntries = async () => {
+      try {
+        const response = await fetch(`${API_URL}/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        // Check if the response is okay
+        if (!response.ok) {
+          throw new Error('Failed to fetch entries');
+        }
 
-  const handleChange = (e) => {
-    setNewEntry({ ...newEntry, [e.target.name]: e.target.value });
+        const data = await response.json();
+
+        // Format entries to be easy to access
+        const formattedEntries = data.reduce((acc, item) => {
+          acc[`${item.day}-${item.time}`] = { entry: item.entry, id: item._id }; // Assuming _id is the identifier
+          return acc;
+        }, {});
+        setEntries(formattedEntries);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchEntries();
+  }, [userId]); // Re-fetch when user.studentId changes
+
+  const handleCellClick = (day, time) => setSelectedSlot({ day, time });
+
+  const handleEntrySubmit = async () => {
+    if (selectedSlot && newEntry) {
+      const { day, time } = selectedSlot;
+      const entryId = entries[`${day}-${time}`]?.id;
+      const method = entryId ? 'PUT' : 'POST';
+      const url = entryId ? `${API_URL}/${entryId}` : API_URL;
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ day, time, entry: newEntry, userId }),
+      });
+
+      if (response.ok) {
+        const savedEntry = await response.json();
+        setEntries(prev => ({
+          ...prev,
+          [`${day}-${time}`]: { entry: savedEntry.entry, id: savedEntry._id },
+        }));
+        setNewEntry('');
+        setSelectedSlot(null);
+      } else {
+        console.error('Failed to save entry');
+      }
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await axios.post(`${BASE_URL}/timeTable`, newEntry);
-    setTimetable([...timetable, res.data]);
-    setNewEntry({ day: '', subject: '', time: '' }); // Reset form
-  };
+  const handleDeleteEntry = async (day, time) => {
+    const entryId = entries[`${day}-${time}`]?.id;
+    if (!entryId) return;
 
-  const handleDelete = async (id) => {
-    await axios.delete(`${BASE_URL}/timeTable/${id}`);
-    setTimetable(timetable.filter((entry) => entry._id !== id));
+    const response = await fetch(`${API_URL}/${entryId}`, { method: 'DELETE' });
+    if (response.ok) {
+      setEntries(prev => {
+        const updated = { ...prev };
+        delete updated[`${day}-${time}`];
+        return updated;
+      });
+    } else {
+      console.error('Failed to delete entry');
+    }
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 p-6">
-      {/* Form to Add New Entry */}
-      <div className="flex-1 bg-white p-6 shadow-md rounded-lg mr-4">
-        <h1 className="text-4xl font-bold mb-8 text-gray-800 text-center">Timetable Manager</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="day"
-            placeholder="Day"
-            value={newEntry.day}
-            onChange={handleChange}
-            required
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-green-400"
-          />
-          <input
-            type="text"
-            name="subject"
-            placeholder="Subject"
-            value={newEntry.subject}
-            onChange={handleChange}
-            required
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-green-400"
-          />
-          <input
-            type="text"
-            name="time"
-            placeholder="Time"
-            value={newEntry.time}
-            onChange={handleChange}
-            required
-            className="w-full p-3 border rounded-md focus:ring-2 focus:ring-green-400"
-          />
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300"
-          >
-            Add Entry
-          </button>
-        </form>
-      </div>
-
-      {/* Timetable Display */}
-      <div className="flex-1 max-w-4xl mx-auto mt-10 p-6 bg-gray-100 shadow-lg rounded-lg">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Weekly Timetable</h1>
-        <table className="w-full table-auto border-collapse border border-gray-300">
+    <div className="p-8 m-20">
+      <h1 className="text-3xl font-bold text-center mb-8 text-blue-700">Weekly Timetable</h1>
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full border border-gray-300 shadow-lg rounded-lg">
           <thead>
-            <tr className="bg-green-500 text-white">
-              <th className="border border-gray-300 px-4 py-2">Day</th>
-              <th className="border border-gray-300 px-4 py-2">Subject</th>
-              <th className="border border-gray-300 px-4 py-2">Time</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
+            <tr>
+              <th className="border border-gray-300 px-4 py-2 bg-blue-200 text-gray-800 font-semibold"></th>
+              {timeSlots.map((time, i) => (
+                <th key={i} className="border border-gray-300 px-4 py-2 bg-blue-200 text-gray-800 font-semibold text-center">
+                  {time}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {timetable.map((entry, index) => (
-              <tr
-                key={entry._id} // Use the unique ID as the key
-                className={`${
-                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                } hover:bg-gray-200`}
-              >
-                <td className="border border-gray-300 px-4 py-2 text-center">{entry.day}</td>
-                <td className="border border-gray-300 px-4 py-2 text-center">{entry.subject}</td>
-                <td className="border border-gray-300 px-4 py-2 text-center">{entry.time}</td>
-                <td className="border border-gray-300 px-4 py-2 text-center">
-                  <button
-                    onClick={() => handleDelete(entry._id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 transition duration-300"
-                  >
-                    Delete
-                  </button>
+            {days.map(day => (
+              <tr key={day} className="bg-white hover:bg-gray-100">
+                <td className="border border-gray-300 px-4 py-2 font-semibold text-center bg-blue-50 text-gray-700">
+                  {day}
                 </td>
+                {timeSlots.map(time => (
+                  <td
+                    key={`${day}-${time}`}
+                    className="border border-gray-300 px-4 py-2 text-center cursor-pointer relative group"
+                    onClick={() => handleCellClick(day, time)}
+                  >
+                    {entries[`${day}-${time}`]?.entry || ""}
+                    {entries[`${day}-${time}`] && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent cell click
+                          handleDeleteEntry(day, time);
+                        }}
+                        className="absolute right-1 top-1 text-red-600 hover:text-red-800 transition-all opacity-0 group-hover:opacity-100"
+                      >
+                        <FaTrash />
+                      </button>
+                    )}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Entry Form */}
+      {selectedSlot && (
+        <div className="mt-6 p-4 bg-gray-50 border rounded-lg w-full max-w-md mx-auto shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700">
+            Add Entry for {selectedSlot.day} at {selectedSlot.time}
+          </h2>
+          <input
+            type="text"
+            value={newEntry}
+            onChange={(e) => setNewEntry(e.target.value)}
+            className="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter subject or activity"
+          />
+          <button
+            onClick={handleEntrySubmit}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition w-full"
+          >
+            Add Entry
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
-export default TimeTable;
+export default Timetable;
