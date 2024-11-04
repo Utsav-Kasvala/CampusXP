@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const classroomSchema = new mongoose.Schema({
@@ -8,10 +9,11 @@ const classroomSchema = new mongoose.Schema({
     professorName: { type: String, required: true }, // Add professor name
     students: [
         {
-            id: { type: String, required: true },
-            name: { type: String, required: true }
+            id: { type: String, required: true }, // Student ID
+            name: { type: String, required: true } // Student name
         }
-    ]
+    ],
+    assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }] // Array of Assignment references
 });
 
 const Classroom = mongoose.model('Classroom', classroomSchema);

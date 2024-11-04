@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom';
 
 const JoinedClassrooms = () => {
     const { studentId, user: { name: studentName } = {} } = useAuth();
@@ -11,10 +11,10 @@ const JoinedClassrooms = () => {
 
     useEffect(() => {
         const fetchJoinedClassrooms = async () => {
-            if (!studentId) return;  // Guard against undefined studentId
+            if (!studentId) return;
             try {
                 const res = await axios.get(`${BASE_URL}/classrooms/joined/${studentId}`);
-                setClassrooms(res.data.classrooms); // Assuming the data structure includes a `classrooms` field
+                setClassrooms(res.data.classrooms);
             } catch (error) {
                 console.error("Error fetching joined classrooms:", error);
             } finally {
@@ -37,7 +37,10 @@ const JoinedClassrooms = () => {
                     <ul className="space-y-4">
                         {classrooms.map(classroom => (
                             <li key={classroom._id} className="border-b pb-4">
-                                <Link to={`/subject/${classroom.subjectName}`} className="text-blue-600 hover:underline">
+                                <Link 
+                                    to={`/subject/${classroom._id}?studentId=${studentId}`} 
+                                    className="text-blue-600 hover:underline"
+                                >
                                     <h3 className="text-xl font-semibold">{classroom.subjectName}</h3>
                                 </Link>
                                 <p className="text-md"><strong>Credits:</strong> {classroom.credits}</p>
