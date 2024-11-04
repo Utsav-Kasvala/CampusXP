@@ -11,7 +11,7 @@ export const getAssignmentsByStudent = async (req, res) => {
         const student = await Student.findOne({ studentId })
             .populate({
                 path: 'assignments.assignment', 
-                select: 'title description dueDate totalPoints professor fileUrl submissions', // Add `submissions`
+                select: 'title description dueDate totalPoints professor  assignmentFileUrl submissions', // Add `submissions`
             })
             .populate({
                 path: 'assignments.classroomId',
@@ -45,7 +45,7 @@ export const getAssignmentsByStudent = async (req, res) => {
                 grade: assignmentRecord.grade || 'Not graded',
                 feedback: assignmentRecord.feedback || 'No feedback',
                 professor: assignmentRecord.assignment.professor,
-                fileUrl: assignmentRecord.assignment.fileUrl,
+                fileUrl: assignmentRecord.assignment. assignmentFileUrl,
                 isSubmitted,
             };
         });
