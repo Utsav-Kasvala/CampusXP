@@ -75,6 +75,7 @@ const Assignments = () => {
                                 <p className="text-md">
                                     <strong>Status:</strong> {assignment.isSubmitted ? "Submitted" : "Unsubmitted"}
                                 </p>
+                                {console.log(assignment)}
                                 {assignment.fileUrl && (
                                     <a
                                         href={assignment.fileUrl}
