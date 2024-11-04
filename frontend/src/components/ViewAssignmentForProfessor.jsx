@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const ViewAssignments = () => {
@@ -21,6 +21,12 @@ const ViewAssignments = () => {
         fetchAssignments();
     }, [joinCode]);
 
+    const navigate = useNavigate();
+    
+    const handleEvaluate = (assignmentId) => {
+        navigate(`/assignments/${assignmentId}/evaluate`);
+    };
+
     return (
         <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
             <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
@@ -34,7 +40,15 @@ const ViewAssignments = () => {
                             <li key={assignment._id} className="p-4 border border-gray-200 rounded-lg shadow-md bg-gray-50">
                                 <h3 className="text-lg font-semibold">{assignment.title}</h3>
                                 <p><strong>Description:</strong> {assignment.description}</p>
-                                <p><strong>Due Date:</strong> {assignment.dueDate}</p>
+                                <p><strong>Due Date:</strong> {new Date(assignment.dueDate).toLocaleDateString()}</p>
+                                <p><strong>Submissions:</strong> {assignment.submissionCount}</p>
+                                
+                                <button
+                                    onClick={() => handleEvaluate(assignment._id)}
+                                    className="mt-2 bg-blue-600 text-white px-4 py-2 rounded"
+                                >
+                                    Evaluate
+                                </button>
                             </li>
                         ))}
                     </ul>

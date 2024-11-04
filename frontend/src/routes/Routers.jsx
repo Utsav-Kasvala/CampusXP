@@ -9,7 +9,7 @@ import StudentDashboard from '../components/StudentDashboard';
 import ProfessorDashboard from '../components/ProfessorDashboard';
 import JoinClassroom from '../pages/JoinClassroom'; // Import the JoinClassroom component
 import JoinedClassrooms from '../pages/JoinedClassrooms'; // Import the JoinedClassrooms component
-import SubjectDetails from '../pages/Subject';
+import Assignments from '../pages/Assignments';
 import CreateClassroom from '../components/CreateClassroom';
 import CreatedClasses from '../components/CreatedClassroom';
 import SubjectDetail from '../pages/SubjectByProfessor';
@@ -18,6 +18,7 @@ import Attendance from '../components/Attendance'
 import ShowAttendance from '../components/ShowAttendance'
 import CreateAssignment from '../components/CreateAssignmentByProfessor';
 import ViewAssignments from '../components/ViewAssignmentForProfessor';
+import EvaluateAssignment from '../components/EvaluateAssignment';
 const Routers = () => {
     return (
         <Routes>
@@ -32,7 +33,7 @@ const Routers = () => {
             <Route path="/professor/classrooms" element={<CreatedClasses/>} />
             <Route path="/professor/subject/:subjectName" element={<SubjectDetail/>} />
             <Route path="/professor/create-class" element={<CreateClassroom />} /> {/* Route to CreateClassroom */}
-            <Route path="/subject/:subjectName" component={SubjectDetails} /> {/* Route for subject details */}
+            <Route path="/subject/:classroomId" element={<Assignments/>}/> {/* Route for subject details */}
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
             <Route path="/timeTable" element={<TimeTable/>}/>
             <Route path="/professor/assignments/:joinCode" element={<ViewAssignments/>} />
@@ -40,6 +41,7 @@ const Routers = () => {
             <Route path="/professor/create-assignment/:joinCode" element={<CreateAssignment />} />
             <Route path="/professor/attendance/:joinCode" element={<ShowAttendance />} />
             <Route path="/professor/attendance/:joinCode/:attendanceId" element={<Attendance />} />
+            <Route path="/assignments/:assignmentId/evaluate" element={<EvaluateAssignment />} />
         </Routes>
     );
 };

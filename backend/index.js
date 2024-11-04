@@ -39,7 +39,7 @@ import authRoutes from './routes/Authroutes.js'; // Adjust according to your fil
 import classroomRoutes from './routes/ClassroomRoutes.js';
 import timeTableRoutes from './routes/TimeTableRoutes.js';
 import attendanceRoutes from './routes/Attendance.js';
-import assignmentRoutes from './routes/Authroutes.js';
+import assignmentRoute from './routes/AssignmentRoutes.js';
 
 dotenv.config(); // Load environment variables
 
@@ -54,7 +54,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/classrooms', classroomRoutes);
 app.use('/api/v1/timeTable', timeTableRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
-app.use('/api/v1/assignments', assignmentRoutes); // Ensure you're using the correct router here
+app.use('/api/v1/assignments',assignmentRoute);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)

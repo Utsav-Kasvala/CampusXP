@@ -3,6 +3,7 @@ import Classroom from '../models/Classroom.js';
 import Student from '../models/Student.js'; // Import the Student model
 import { v4 as uuidv4 } from 'uuid';
 import Professor from '../models/Professor.js';
+import cloudinary from '../config/cloudinaryConfig.js';
 import Assignment from '../models/Assignment.js'
 export const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch((error) => {
@@ -11,32 +12,15 @@ export const asyncHandler = (fn) => (req, res, next) => {
     });
 };
 //View Assignment
-// export const getAssignmentsByClassroomJoinCode = async (req, res) => {
-//     const { joinCode } = req.params;
-
-//     try {
-//         // Find assignments where the classroom join code matches
-//         const assignments = await Assignment.find({ classroomJoinCode: joinCode })
-//             .populate('professor', 'name'); // Populate professor details (adjust field names as needed)
-//         console.log(assignments);
-//         // Check if assignments were found
-//         if (!assignments || assignments.length === 0) {
-//             return res.status(404).json({ message: 'No assignments found for this classroom.' });
-//         }
-
-//         // Return the found assignments
-//         res.status(200).json({ assignments });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Server error. Please try again later.' });
-//     }
-// };
 export const getAssignmentsByClassroomJoinCode = async (req, res) => {
     const { joinCode } = req.params;
 
     try {
-        // Find the classroom using the join code
-        const classroom = await Classroom.findOne({ joinCode }).populate('assignments');
+        // Find the classroom using the join code and populate assignments
+        const classroom = await Classroom.findOne({ joinCode }).populate({
+            path: 'assignments',
+            select: 'title description dueDate submissions', // Select fields, including submissions array
+        });
 
         // Check if the classroom was found
         if (!classroom) {
@@ -48,13 +32,94 @@ export const getAssignmentsByClassroomJoinCode = async (req, res) => {
             return res.status(404).json({ message: 'No assignments found for this classroom.' });
         }
 
-        // Return the found assignments along with classroom details if needed
-        res.status(200).json({ assignments: classroom.assignments });
+        // Format assignments to include submission count
+        const formattedAssignments = classroom.assignments.map((assignment) => ({
+            _id: assignment._id,
+            title: assignment.title,
+            description: assignment.description,
+            dueDate: assignment.dueDate,
+            submissionCount: assignment.submissions.length, // Count of submissions
+        }));
+
+        // Return assignments with submission counts
+        res.status(200).json({ assignments: formattedAssignments });
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching assignments:", error);
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
+
+
+//     const { joinCode } = req.params;
+
+//     try {
+//         // Find the classroom using the join code and populate assignments and submissions
+//         const classroom = await Classroom.findOne({ joinCode }).populate({
+//             path: 'assignments',
+//             populate: {
+//                 path: 'submissions.student', // Populate the student field within each submission
+//                 select: 'name studentId' // Select relevant student fields
+//             }
+//         });
+
+//         // Check if the classroom was found
+//         if (!classroom) {
+//             return res.status(404).json({ message: 'Classroom not found.' });
+//         }
+
+//         // Check if assignments are available
+//         if (!classroom.assignments || classroom.assignments.length === 0) {
+//             return res.status(404).json({ message: 'No assignments found for this classroom.' });
+//         }
+
+//         // Format assignments to include submission details
+//         const formattedAssignments = classroom.assignments.map((assignment) => ({
+//             _id: assignment._id,
+//             title: assignment.title,
+//             description: assignment.description,
+//             dueDate: assignment.dueDate,
+//             totalPoints: assignment.totalPoints,
+//             submissions: assignment.submissions.map((submission) => ({
+//                 studentName: submission.student.name,
+//                 studentId: submission.student.studentId,
+//                 submissionDate: submission.submissionDate,
+//                 fileUrl: submission.fileUrl,
+//                 grade: submission.grade || 'Not graded'
+//             }))
+//         }));
+
+//         // Return the formatted assignments with submission details
+//         res.status(200).json({ assignments: formattedAssignments });
+//     } catch (error) {
+//         console.error("Error fetching assignments:", error);
+//         res.status(500).json({ message: 'Server error. Please try again later.' });
+//     }
+// };
+
+// export const getAssignmentsByClassroomJoinCode = async (req, res) => {
+//     const { joinCode } = req.params;
+
+//     try {
+//         // Find the classroom using the join code
+//         const classroom = await Classroom.findOne({ joinCode }).populate('assignments');
+
+//         // Check if the classroom was found
+//         if (!classroom) {
+//             return res.status(404).json({ message: 'Classroom not found.' });
+//         }
+
+//         // Check if assignments are available
+//         if (!classroom.assignments || classroom.assignments.length === 0) {
+//             return res.status(404).json({ message: 'No assignments found for this classroom.' });
+//         }
+
+//         // Return the found assignments along with classroom details if needed
+//         res.status(200).json({ assignments: classroom.assignments });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error. Please try again later.' });
+//     }
+// };
 
 export const create=asyncHandler(async (req, res) => {
     const { subjectName, credits, professorId, professorName } = req.body;
@@ -126,24 +191,36 @@ export const CreatedClass=asyncHandler(async (req, res) => {
     }
 });
 //Create Assignment
+
 export const createAssignment = async (req, res) => {
     const { joinCode } = req.params; // Classroom join code from URL params
-    const { title, description, dueDate, totalPoints,professorId } = req.body; // Assignment details from request body
-   //const professorId = req.user.professorId; // Assuming professorId is obtained from the authenticated user
+    const { title, description, dueDate, totalPoints, professorId } = req.body; // Assignment details from request body
+    const file = req.file; // File uploaded through multer
 
     try {
         // Find the classroom by joinCode
-        const classroom = await Classroom.findOne({ joinCode });
+        const classroom = await Classroom.findOne({ joinCode }).populate('students'); // Populate students to access their IDs
         if (!classroom) return res.status(404).json({ message: 'Classroom not found.' });
 
-        // Create a new assignment
+        // Upload file to Cloudinary if file exists
+        let fileUrl = null;
+        if (file) {
+            const result = await cloudinary.uploader.upload(file.path, {
+                resource_type: 'raw', // Use 'raw' for documents like PDFs
+                folder: 'assignments' // Optional: specify folder on Cloudinary
+            });
+            fileUrl = result.secure_url; // Cloudinary's file URL
+        }
+
+        // Create a new assignment with fileUrl if provided
         const assignment = new Assignment({
             title,
             description,
             dueDate,
             totalPoints,
             classroom: classroom._id,
-            professor: professorId
+            professor: professorId,
+            assignmentFileUrl: fileUrl // Store the uploaded file URL
         });
 
         await assignment.save();
@@ -155,7 +232,7 @@ export const createAssignment = async (req, res) => {
 
         // Update each student's assignments array
         const studentUpdates = classroom.students.map(async (student) => {
-            const studentRecord = await Student.findById(student.id);
+            const studentRecord = await Student.findOne({ studentId: student.id });
             if (studentRecord) {
                 studentRecord.assignments.push({
                     assignment: assignment._id,
@@ -172,6 +249,8 @@ export const createAssignment = async (req, res) => {
         res.status(500).json({ message: 'Failed to create assignment.' });
     }
 };
+
+
 
 export const getClassroomByJoinCode = async (req, res) => {
     try {
