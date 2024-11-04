@@ -38,7 +38,7 @@ const JoinClassroom = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md mt-20">
+        <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md mt-40">
             <h2 className="text-2xl font-bold mb-4 text-center">Join Classroom</h2>
             {/* Display the student's name */}
             <p className="text-lg mb-4 text-center">Student Name: {user?.name}</p>

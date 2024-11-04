@@ -19,6 +19,7 @@ import ShowAttendance from '../components/ShowAttendance'
 import CreateAssignment from '../components/CreateAssignmentByProfessor';
 import ViewAssignments from '../components/ViewAssignmentForProfessor';
 import EvaluateAssignment from '../components/EvaluateAssignment';
+import LeaderBoard from '../pages/LeaderBoard';
 const Routers = () => {
     return (
         <Routes>
@@ -36,6 +37,7 @@ const Routers = () => {
             <Route path="/subject/:classroomId" element={<Assignments/>}/> {/* Route for subject details */}
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
             <Route path="/timeTable" element={<TimeTable/>}/>
+            <Route path="/leaderboard" element={<LeaderBoard/>}/>
             <Route path="/professor/assignments/:joinCode" element={<ViewAssignments/>} />
             {/* <Rout path="/professor/assignments/:joinCode" element={<ViewAssignments/>}/> */}
             <Route path="/professor/create-assignment/:joinCode" element={<CreateAssignment />} />

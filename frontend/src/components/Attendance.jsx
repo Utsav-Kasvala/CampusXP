@@ -42,7 +42,7 @@ const AttendancePage = () => {
     };
 
     return (
-        <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+        <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen mt-20">
             <h1 className="text-2xl font-bold mb-4">Take Attendance for Session</h1>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             {attendance ? (

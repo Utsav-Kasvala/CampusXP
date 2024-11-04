@@ -22,7 +22,7 @@ const AttendancePage = () => {
     }, [joinCode]);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 mt-20">
             <h1 className="text-2xl font-bold text-blue-600 mb-4">
                 Attendance Records for Join Code: {joinCode}
             </h1>

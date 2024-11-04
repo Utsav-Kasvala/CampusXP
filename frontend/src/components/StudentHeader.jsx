@@ -17,7 +17,9 @@ const StudentHeader = () => {
       <div className="flex items-center justify-between w-full max-w-screen mx-auto py-4 px-6 text-white">
         
         {/* Student's Name or Title */}
-        <h1 className="text-xl font-semibold">{user?.name || "Campus College Tracker"}</h1>
+        <h1 className="text-3xl font-bold text-black bg-white rounded-lg shadow-md px-6 py-4 inline-block">
+    {user?.name || "CampusXP"}
+</h1>
 
         {/* Navigation Links */}
         <nav className="flex space-x-8 text-base font-medium">

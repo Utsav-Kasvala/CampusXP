@@ -8,7 +8,7 @@ import classroomRoutes from './routes/ClassroomRoutes.js';
 import timeTableRoutes from './routes/TimeTableRoutes.js';
 import attendanceRoutes from './routes/Attendance.js';
 import assignmentRoute from './routes/AssignmentRoutes.js';
-
+import leaderboardRoute from './routes/Lbroutes.js'
 dotenv.config(); // Load environment variables
 
 const app = express();
@@ -23,6 +23,8 @@ app.use('/api/v1/classrooms', classroomRoutes);
 app.use('/api/v1/timeTable', timeTableRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/assignments',assignmentRoute);
+app.use('/api/v1/leaderboard',leaderboardRoute);
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)

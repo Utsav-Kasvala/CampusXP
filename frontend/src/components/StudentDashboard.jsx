@@ -5,7 +5,7 @@ const StudentDashboard = () => {
     const { user, studentId } = useContext(authContext);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 mt-20">
             <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6 mb-6">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-blue-600">Student Dashboard</h1>
