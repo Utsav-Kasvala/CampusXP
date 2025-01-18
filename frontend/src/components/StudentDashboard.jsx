@@ -1,36 +1,62 @@
-import React, { useContext } from 'react';
-import { authContext } from '../context/AuthContext.jsx';
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { authContext } from '../context/AuthContext';
 
-const StudentDashboard = () => {
-    const { user, studentId } = useContext(authContext);
+const ClassroomWiseAttendance = () => {
+    const { user, studentId } = useContext(authContext); // Get the student ID from context
+    const [attendanceData, setAttendanceData] = useState([]); // Store fetched attendance data
+    const [loading, setLoading] = useState(true); // Track loading state
+
+    useEffect(() => {
+        const fetchAttendance = async () => {
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_BASE_URL}/students/${studentId}/classroomwiseattendance`
+                );
+                setAttendanceData(response.data.classroomwiseattendance); // Update state with fetched data
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching attendance data:', error.response?.data?.message || error.message);
+            } finally {
+                setLoading(false); // Set loading state to false once data is fetched
+            }
+        };
+
+        if (studentId) {
+            fetchAttendance();
+        }
+    }, [studentId]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 mt-20">
-            <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6 mb-6">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-blue-600">Student Dashboard</h1>
-                    <div>
-                        {user?.name ? (
-                            <span className="text-gray-700 text-lg">
-                                Welcome, {user.name}! Your ID is <strong>{studentId}</strong>
-                            </span>
-                        ) : (
-                            <span className="text-red-500 text-lg">Please log in.</span>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Additional content for the Student Dashboard can go here */}
-            <div className="w-full max-w-3xl">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Your Courses and Activities</h2>
-                <div className="p-4 bg-white shadow-md rounded-md">
-                    {/* Placeholder for future dashboard content */}
-                    <p className="text-gray-600">You have no activities to display at the moment.</p>
-                </div>
+            <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+                <h1 className="text-2xl font-bold text-blue-600">Classroom-wise Attendance</h1>
+                {attendanceData.length > 0 ? (
+                    attendanceData.map((classroom, index) => (
+                        <div key={index} className="my-4 p-4 bg-gray-50 rounded-md shadow">
+                            <h2 className="text-xl font-semibold text-gray-800">
+                                {classroom.classname} ({classroom.joinCode})
+                            </h2>
+                            <ul className="list-disc list-inside text-gray-700 mt-2">
+                                <li>
+                                    Date: {new Date(classroom.date).toLocaleDateString()} -{' '}
+                                    <span className={classroom.present ? 'text-green-500' : 'text-red-500'}>
+                                        {classroom.present ? 'Present' : 'Absent'}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-600">No attendance records found.</p>
+                )}
             </div>
         </div>
     );
 };
 
-export default StudentDashboard;
+export default ClassroomWiseAttendance;

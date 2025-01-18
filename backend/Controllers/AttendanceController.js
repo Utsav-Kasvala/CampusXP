@@ -15,6 +15,7 @@ export const createattendance=async (req, res) => {
         // Create a new attendance record for the classroom
         const newAttendance = new Attendance({
             joinCode: classroom.joinCode,
+            subjectName: classroom.subjectName,
             date: new Date(), // Can also be specified in the request body if needed
             students: classroom.students.map(student => ({
                 studentId: student.id,
@@ -66,46 +67,63 @@ export const getattendancefromjoincode=async (req, res) => {
 
 export const updateAttendance = async (req, res) => {
     const { attendanceId } = req.params;
-    const { students } = req.body; // Expect an array of student attendance data
-    
+    const { students } = req.body;
 
     try {
         // Find the attendance record by ID
         const attendance = await Attendance.findById(attendanceId);
         if (!attendance) {
-            return res.status(404).json({ message: 'Attendance record not found.' });
+            return res.status(404).json({ message: "Attendance record not found." });
         }
 
         // Iterate over the students in the request body
         for (let updatedStudent of students) {
-            // Find the student in the attendance record using the studentId (not _id)
-            const studentInRecord = attendance.students.find(student => student.studentId === updatedStudent.studentId);
-            
-            if (studentInRecord) {
-                // If the student is present, increase their points
-                if (updatedStudent.present === true) {
-                    // Find the student in the Student model and update their points
-                    
-                    const st=await Student.findOneAndUpdate(
-                        { studentId: updatedStudent.studentId }, // Find by studentId (UUID)
-                        { $inc: { points: 1 } }, // Increment the points field by 1
-                    );
-                    console.log(st);
+            const studentInRecord = attendance.students.find(
+                student => student.studentId === updatedStudent.studentId
+            );
 
+            if (studentInRecord) {
+                // Update points if student is marked present
+                if (updatedStudent.present === true) {
+                    await Student.findOneAndUpdate(
+                        { studentId: updatedStudent.studentId },
+                        { $inc: { points: 1 } }
+                    );
                 }
-                // Update the status in the attendance record
+
+                // Update attendance status
                 studentInRecord.present = updatedStudent.present;
+
+                // Update the student's classroom-wise attendance
+                await Student.findOneAndUpdate(
+                    { studentId: updatedStudent.studentId },
+                    {
+                        $push: {
+                            classroomswiseattendance: {
+                                joinCode: attendance.joinCode,
+                                classname: attendance.subjectName,
+                                date: attendance.date,
+                                present: updatedStudent.present,
+                            },
+                        },
+                    }
+                );
             }
         }
 
-        // Save the updated attendance record to the database
-        const newAttendance = await attendance.save();
-       // console.log(newAttendance);
+        // Save the updated attendance record
+        const updatedAttendance = await attendance.save();
 
-        res.status(200).json({ message: 'Attendance and points updated successfully.' });
+        res.status(200).json({
+            message: "Attendance and points updated successfully.",
+            attendance: updatedAttendance,
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to update attendance.' });
+        res.status(500).json({ message: "Failed to update attendance." });
     }
 };
+
+
+
 

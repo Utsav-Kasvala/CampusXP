@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const attendanceSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }, // Date of the attendance session
     joinCode: { type: String },
+    subjectName:{ type: String },
     students: [
         {
             studentId: { type: String, required: true},

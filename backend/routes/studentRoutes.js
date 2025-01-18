@@ -1,11 +1,16 @@
 import express from "express";
 import Student from "../models/Student.js";
 import mongoose from "mongoose"; // To validate ObjectId
-
+import {getclassromwiseattendance} from '../Controllers/StudentController.js'
 const router = express.Router();
 
+
+router.get("/:studentId/classroomwiseattendance",getclassromwiseattendance);
+
+
+
 // Route to add classroom to a student's list
-router.put("/students/:id/addClassroom", async (req, res) => {
+router.put("/:id/addClassroom", async (req, res) => {
     const { classroomId } = req.body;
 
     // Validate classroomId
