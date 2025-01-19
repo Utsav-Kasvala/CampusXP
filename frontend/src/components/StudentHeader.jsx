@@ -26,6 +26,9 @@ const StudentHeader = () => {
           <Link to="/home" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiHome className="mr-2" /> Home
           </Link>
+          <Link to="/studentdashboard" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
+            <FiBook className="mr-2" /> Dashboard
+          </Link>
           <Link to="/join-classroom" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiBook className="mr-2" /> Join a Classroom
           </Link>

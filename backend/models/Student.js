@@ -39,6 +39,19 @@ const StudentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Classroom" 
     }], // Array to store references to Classroom IDs
+    classroomswiseattendance: [
+        {
+            joinCode: { 
+                type: String ,
+            },
+            classname:{
+                type: String ,
+            },
+            date: { type: Date }, 
+            present: { type: Boolean} 
+                
+        }
+    ],
     assignments: [{
         assignment: { type: mongoose.Schema.Types.ObjectId, ref: "Assignment" }, // Reference to the Assignment
         classroomId: { type: mongoose.Schema.Types.ObjectId, ref: "Classroom" }, // Reference to the Classroom

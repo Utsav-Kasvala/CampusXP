@@ -200,13 +200,14 @@ export const getClassroomByJoinCode = async (req, res) => {
     }
 };
 // Join Classroom
-export const join= asyncHandler(async (req, res) => {
+export const join = asyncHandler(async (req, res) => {
     const { code, studentId, studentName } = req.body;
 
     if (!code || !studentId || !studentName) {
         return res.status(400).json({ message: "Join code, student ID, and student name are required." });
     }
 
+    // Find the classroom by joinCode
     const classroom = await Classroom.findOneAndUpdate(
         { joinCode: code },
         { $addToSet: { students: { id: studentId, name: studentName } } },
@@ -224,8 +225,11 @@ export const join= asyncHandler(async (req, res) => {
         { new: true }
     );
 
+    
+
     res.status(200).json({ message: "Joined classroom successfully.", classroom });
 });
+
 
 export const joined=asyncHandler(async (req, res) => {
     const { studentId } = req.params;

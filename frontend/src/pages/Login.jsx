@@ -4,6 +4,9 @@ import { BASE_URL } from "../config";
 import { authContext } from "../context/AuthContext";
 import loginImg from '../assets/images/login.gif'
 
+
+
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -66,6 +69,7 @@ const Login = () => {
     }
   };
 
+
   return (
     <section className="flex h-screen ">
       {/* Left Image Section */}
@@ -119,7 +123,9 @@ const Login = () => {
                {loading ? "Loading..." : "Submit"} {/* Show loading text */}
               </button>
             </div>
-
+            
+            
+           
             <p className="mt-4 text-center">Don&apos;t have an Account? 👉 <Link to='/Register' className="text-blue-500">Register</Link></p>
           </form>
         </div>
