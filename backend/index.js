@@ -24,7 +24,7 @@ app.use('/api/v1/timeTable', timeTableRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/assignments',assignmentRoute);
 app.use('/api/v1/leaderboard',leaderboardRoute);
-
+//console.log('Mongo URL:', process.env.MONGO_URL);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)
