@@ -28,6 +28,7 @@ app.use('/api/v1/leaderboard',leaderboardRoute);
 app.use('/api/v1/students',studentroutes);
 
 
+
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log('MongoDB connected'))

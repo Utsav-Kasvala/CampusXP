@@ -98,9 +98,35 @@ export const submitAssignment = async (req, res) => {
     }
 };
 
+// export const getAssignmentSubmissions = async (req, res) => {
+//     const { assignmentId } = req.params;
+//     console.log(assignmentId);
+//     try {
+//         const assignment = await Assignment.findById(assignmentId).populate({
+//             path: 'submissions.student',
+//             select: 'name', // Select only the student's name
+//         });
+
+//         if (!assignment) {
+//             return res.status(404).json({ message: 'Assignment not found.' });
+//         }
+
+//         const submissionDetails = assignment.submissions.map((submission) => ({
+//             studentName: submission.student.name,
+//             submissionDate: submission.submissionDate,
+//             fileUrl: submission.fileUrl,
+//         }));
+
+//         res.status(200).json({ submissions: submissionDetails });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error. Please try again later.' });
+//     }
+// };
 export const getAssignmentSubmissions = async (req, res) => {
     const { assignmentId } = req.params;
-    console.log(assignmentId);
+    console.log(assignmentId); // Debugging: Log the assignmentId for verification
+
     try {
         const assignment = await Assignment.findById(assignmentId).populate({
             path: 'submissions.student',
@@ -111,15 +137,19 @@ export const getAssignmentSubmissions = async (req, res) => {
             return res.status(404).json({ message: 'Assignment not found.' });
         }
 
+        // Include `_id` in the response
         const submissionDetails = assignment.submissions.map((submission) => ({
-            studentName: submission.student.name,
+            _id: submission._id, // Include the unique identifier for the submission
+            studentName: submission.student?.name || 'Unknown', // Handle case where student might be missing
             submissionDate: submission.submissionDate,
             fileUrl: submission.fileUrl,
+            grade: submission.grade || null, // Include grade if available
+            feedback: submission.feedback || '', // Include feedback if available
         }));
 
         res.status(200).json({ submissions: submissionDetails });
     } catch (error) {
-        console.error(error);
+        console.error(error); // Log the error for debugging
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
