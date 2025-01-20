@@ -17,10 +17,13 @@ const StudentHeader = () => {
       <div className="flex items-center justify-between w-full max-w-screen mx-auto py-4 px-6 text-white">
         
         {/* Student's Name or Title */}
-        <h1 className="text-3xl font-bold text-black bg-white rounded-lg shadow-md px-6 py-4 inline-block">
+        <nav>
+        <Link to="/studentProfile">
+  <h1 className="text-3xl font-bold text-black bg-white rounded-lg shadow-md px-6 py-4 inline-block">
     {user?.name || "CampusXP"}
-</h1>
-
+  </h1>
+</Link>
+</nav>
         {/* Navigation Links */}
         <nav className="flex space-x-8 text-base font-medium">
           <Link to="/home" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
