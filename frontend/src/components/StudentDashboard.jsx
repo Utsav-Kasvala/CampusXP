@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { PieChart } from 'react-minimal-pie-chart';
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import { authContext } from '../context/AuthContext';
 
 const ClassroomWiseAttendance = () => {
   const { studentId } = useContext(authContext);
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [hoveredSegment, setHoveredSegment] = useState(null);
 
-  // Fetch attendance data
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
@@ -29,18 +27,10 @@ const ClassroomWiseAttendance = () => {
     }
   }, [studentId]);
 
-  // Loading indicator
-  const renderLoadingState = () => (
-    <div className="flex justify-center items-center">
-      <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full border-t-transparent border-blue-500"></div>
-    </div>
-  );
-
   if (loading) {
-    return <div className="flex justify-center items-center mt-10">{renderLoadingState()}</div>;
+    return <div className="text-center mt-10">Loading...</div>;
   }
 
-  // Group attendance data by classname
   const groupedAttendance = attendanceData.reduce((acc, record) => {
     const { classname, present } = record;
 
@@ -58,67 +48,55 @@ const ClassroomWiseAttendance = () => {
     return acc;
   }, {});
 
-  // Generate pie chart data for each class
-  const generatePieChartData = (classData) => {
-    const { present, absent } = classData;
-    return [
-      { id: 0, value: present, label: 'Present', color: '#66BB6A' }, // Green for Present
-      { id: 1, value: absent, label: 'Absent', color: '#EF5350' }, // Red for Absent
-    ];
-  };
+  const generatePieChartData = (classData) => [
+    {
+      id: 'Present',
+      value: classData.present,
+      color: '#4caf50',
+    },
+    {
+      id: 'Absent',
+      value: classData.absent,
+      color: '#f44336',
+    },
+  ];
+
+  const formatLabel = (item) => `${item.id}: ${item.value}`;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 mt-20">
-      <div className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-blue-600 text-center mb-6">Class-wise Attendance</h1>
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="w-full max-w-4xl mx-auto bg-white shadow rounded-lg p-6">
+        <h1 className="text-2xl font-bold text-center mb-6">Class-wise Attendance</h1>
+        {Object.keys(groupedAttendance).map((classname, index) => {
+          const classData = groupedAttendance[classname];
+          const pieChartData = generatePieChartData(classData);
 
-        {Object.keys(groupedAttendance).length > 0 ? (
-          Object.keys(groupedAttendance).map((classname, index) => {
-            const classData = groupedAttendance[classname];
-            const pieChartData = generatePieChartData(classData);
-
-            return (
-              <div key={index} className="my-6 p-6 bg-gray-50 rounded-md shadow-md">
-                <h2 className="text-xl font-semibold text-gray-800 text-center mb-4">{classname}</h2>
-                <div className="flex flex-col items-center">
-                  <div
-                    className="pie-chart-container"
-                    style={{
-                      width: '100%',
-                      maxWidth: '400px',
-                      height: '300px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <PieChart
-                      data={pieChartData}
-                      lineWidth={30}
-                      segmentsShift={(index) => (index === hoveredSegment ? 5 : 0)}
-                      label={({ dataEntry }) =>
-                        hoveredSegment === dataEntry.id ? `${dataEntry.label}: ${dataEntry.value}` : ''
-                      }
-                      labelStyle={{
-                        fontSize: '12px',
-                        fontFamily: 'Arial, sans-serif',
-                        fill: '#fff',
-                      }}
-                      onMouseOver={(_, index) => setHoveredSegment(index)}
-                      onMouseOut={() => setHoveredSegment(null)}
-                      style={{ height: '100%', width: '100%' }}
-                    />
-                  </div>
-                  <p className="text-gray-700 mt-4 text-center">
-                    Total Classes: {classData.total} | Present: {classData.present} | Absent: {classData.absent}
-                  </p>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p className="text-center text-gray-600">No attendance records found.</p>
-        )}
+          return (
+            <div key={index} className="mb-6 p-4 bg-gray-50 shadow rounded">
+              <h2 className="text-xl font-semibold mb-4">{classname}</h2>
+              <PieChart
+                series={[
+                  {
+                    data: pieChartData,
+                    arcLabel: formatLabel,
+                    arcLabelMinAngle: 35,
+                    arcLabelRadius: '60%',
+                  },
+                ]}
+                sx={{
+                  [`& .${pieArcLabelClasses.root}`]: {
+                    fontWeight: 'bold',
+                  },
+                }}
+                width={400}
+                height={200}
+              />
+              <p className="mt-4 text-center">
+                Total Classes: {classData.total} | Present: {classData.present} | Absent: {classData.absent}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
