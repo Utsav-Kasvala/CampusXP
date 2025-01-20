@@ -14,7 +14,7 @@ const StudentSchema = new mongoose.Schema({
     },
     points: { 
         type: Number,
-        default:0,x
+        default:0,
     },
     password: { 
         type: String, 
@@ -25,7 +25,8 @@ const StudentSchema = new mongoose.Schema({
         required: true 
     },
     phone: { 
-        type: Number 
+        type: Number,
+        default:0
     },
     photo: { 
         type: String 
