@@ -22,6 +22,10 @@ import EvaluateAssignment from '../components/EvaluateAssignment';
 import LeaderBoard from '../pages/LeaderBoard';
 import StudentProfile from '../components/StudentProfile';
 import QuizCreationPage from '../components/QuizCreation';
+import Joincall from '.././pages/Joincall';
+import Conferencecall from '.././pages/Conferencecall';
+import Createcall from '.././pages/Createcall';
+
 const Routers = () => {
     return (
         <Routes>
@@ -40,6 +44,9 @@ const Routers = () => {
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
             <Route path="/timeTable" element={<TimeTable/>}/>
             <Route path="/studentProfile" element={<StudentProfile/>}/>
+            <Route path="/leaderboard" element={<LeaderBoard/>}/>
+            <Route path="/joincall" element={<Joincall/>}/>
+            <Route path="/conferencecall/:callid" element={<Conferencecall/>}/>
             <Route path="/leaderboard" element={<LeaderBoard/>}/>
             <Route path="/professor/create-quiz/:joinCode" element={<QuizCreationPage />} />
             <Route path="/professor/assignments/:joinCode" element={<ViewAssignments/>} />
