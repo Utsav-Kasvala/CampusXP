@@ -11,6 +11,7 @@ import assignmentRoute from './routes/AssignmentRoutes.js';
 import leaderboardRoute from './routes/Lbroutes.js'
 import studentProfileRoute from './routes/StudentProfileRoutes.js'
 import studentroutes from './routes/studentRoutes.js'
+import quizroutes from './routes/QuizRoutes.js'
 dotenv.config(); // Load environment variables
 
 const app = express();
@@ -28,7 +29,7 @@ app.use('/api/v1/assignments',assignmentRoute);
 app.use('/api/v1/leaderboard',leaderboardRoute);
 app.use('/api/v1/studentProfile',studentProfileRoute)
 app.use('/api/v1/students',studentroutes);
-
+app.use('/api/v1/quiz',quizroutes);
 
 
 // MongoDB connection

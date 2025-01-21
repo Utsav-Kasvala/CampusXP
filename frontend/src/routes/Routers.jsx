@@ -21,6 +21,7 @@ import ViewAssignments from '../components/ViewAssignmentForProfessor';
 import EvaluateAssignment from '../components/EvaluateAssignment';
 import LeaderBoard from '../pages/LeaderBoard';
 import StudentProfile from '../components/StudentProfile';
+import QuizCreationPage from '../components/QuizCreation';
 const Routers = () => {
     return (
         <Routes>
@@ -40,8 +41,8 @@ const Routers = () => {
             <Route path="/timeTable" element={<TimeTable/>}/>
             <Route path="/studentProfile" element={<StudentProfile/>}/>
             <Route path="/leaderboard" element={<LeaderBoard/>}/>
+            <Route path="/professor/create-quiz/:joinCode" element={<QuizCreationPage />} />
             <Route path="/professor/assignments/:joinCode" element={<ViewAssignments/>} />
-            {/* <Rout path="/professor/assignments/:joinCode" element={<ViewAssignments/>}/> */}
             <Route path="/professor/create-assignment/:joinCode" element={<CreateAssignment />} />
             <Route path="/professor/attendance/:joinCode" element={<ShowAttendance />} />
             <Route path="/professor/attendance/:joinCode/:attendanceId" element={<Attendance />} />
