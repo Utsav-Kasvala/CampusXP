@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authContext } from '../context/AuthContext.jsx';
-import { FiHome, FiBook, FiCalendar, FiStar, FiLogOut, FiActivity } from 'react-icons/fi';
+import { FiHome, FiBook, FiCalendar, FiStar, FiLogOut, FiActivity ,FiVideo} from 'react-icons/fi';
 
 const StudentHeader = () => {
   const { user, dispatch } = useContext(authContext);
@@ -45,8 +45,8 @@ const StudentHeader = () => {
             <FiStar className="mr-2" /> Leaderboard
           </Link>
           <Link to="/joincall" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
-            <FiStar className="mr-2" /> Leaderboard
-          </Link>
+          <FiVideo className="mr-2" /> Join Call
+         </Link>
         </nav>
 
         {/* Logout Button */}
