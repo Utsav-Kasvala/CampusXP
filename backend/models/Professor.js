@@ -12,6 +12,8 @@ const ProfessorSchema = new mongoose.Schema({
         default: 'professor', // Set default role to professor
     },
     classrooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Classroom' }], // Array of references to classrooms
+    resetPasswordToken: {type: String},
+    resetPasswordExpires:{type: Date},
 });
 
 // Optional: Pre-save hook to ensure the professorId is always generated

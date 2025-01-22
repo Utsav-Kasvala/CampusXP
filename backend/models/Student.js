@@ -36,6 +36,8 @@ const StudentSchema = new mongoose.Schema({
         enum: ["student", "admin"],
         default: "student",
     },
+    resetPasswordToken: {type: String},
+    resetPasswordExpires:{type: Date},
     classrooms: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Classroom" 
