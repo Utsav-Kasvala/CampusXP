@@ -3,9 +3,9 @@ import { authContext } from "../context/AuthContext";
 import { BASE_URL, token } from "../config";
 import profilepic from "../assets/images/profilepic.png";
 
-const StudentProfile = () => {
+const ProfProfile = () => {
   const { user } = useContext(authContext);
-  const userId = user.studentId;
+  const userId = user.professorId;
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,9 +13,9 @@ const StudentProfile = () => {
     email: "",
     phone: "",
   });
-  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const API_URL = `${BASE_URL}/studentProfile`;
+  const API_URL = `${BASE_URL}/profProfile`;
 
   // Fetch user profile data
   useEffect(() => {
@@ -29,7 +29,6 @@ const StudentProfile = () => {
         }
         const data = await response.json();
         setProfile(data);
-        // Ensure the formData is updated when the profile data is fetched
         setFormData({
           name: data.name,
           email: data.email,
@@ -60,11 +59,11 @@ const StudentProfile = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message); // Set the error message from backend
+        setErrorMessage(errorData.message);
         return;
       }
 
-      setErrorMessage(""); // Clear any previous error messages
+      setErrorMessage("");
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -74,7 +73,7 @@ const StudentProfile = () => {
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-gray-600">Loading...</p>
+        <p className="text-lg text-blue-700 animate-pulse">Loading...</p>
       </div>
     );
   }
@@ -90,7 +89,7 @@ const StudentProfile = () => {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name} // Ensure the input reflects the state
+                  value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Name"
                   className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -98,7 +97,7 @@ const StudentProfile = () => {
                 <input
                   type="email"
                   name="email"
-                  value={formData.email} // Ensure the input reflects the state
+                  value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Email"
                   className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -106,13 +105,13 @@ const StudentProfile = () => {
                 <input
                   type="number"
                   name="phone"
-                  value={formData.phone} // Ensure the input reflects the state
+                  value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="Phone"
                   className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
                 {errorMessage && (
-                  <div className="text-red-400 text-sm mt-2">{errorMessage}</div> // Display error message
+                  <div className="text-red-400 text-sm mt-2">{errorMessage}</div>
                 )}
                 <div className="flex justify-between">
                   <button
@@ -134,7 +133,17 @@ const StudentProfile = () => {
                 <h1 className="text-3xl font-bold">{profile.name}</h1>
                 <p className="text-lg">Email: {profile.email}</p>
                 <p className="text-lg">Phone: {profile.phone}</p>
-                <p className="text-lg">Points: {profile.points}</p>
+                <h2 className="text-xl font-semibold mt-4">Subjects Taught:</h2>
+                <ul className="list-disc ml-6">
+                  {profile.classrooms.map((classroom) => (
+                    <li
+                      key={classroom.joinCode}
+                      className="text-gray-100 font-medium"
+                    >
+                      {classroom.subjectName} ({classroom.credits} credits)
+                    </li>
+                  ))}
+                </ul>
                 <button
                   onClick={() => setIsEditing(true)}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700 transform hover:scale-105 transition duration-300"
@@ -147,7 +156,7 @@ const StudentProfile = () => {
         </div>
 
         {/* Right Section */}
-        <div className="w-full sm:w-1/3 p-6 flex flex-col items-center justify-center space-y-6">
+        <div className="w-full sm:w-1/3 p-6 flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 to-blue-500 space-y-6">
           <div className="w-40 h-40 bg-gray-300 rounded-full overflow-hidden border-4 border-blue-700 shadow-lg transform hover:rotate-6 transition duration-500">
             <img
               src={profilepic}
@@ -162,4 +171,4 @@ const StudentProfile = () => {
   );
 };
 
-export default StudentProfile;
+export default ProfProfile;

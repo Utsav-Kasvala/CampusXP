@@ -25,6 +25,7 @@ import QuizCreationPage from '../components/QuizCreation';
 import Joincall from '.././pages/Joincall';
 import Conferencecall from '.././pages/Conferencecall';
 import Createcall from '.././pages/Createcall';
+import ProfProfile from '../components/ProfProfile';
 
 const Routers = () => {
     return (
@@ -44,6 +45,7 @@ const Routers = () => {
             <Route path="/joined-classrooms" element={<ProtectedRoute allowedRoles={['student']}><JoinedClassrooms /></ProtectedRoute>} /> {/* New route */}
             <Route path="/timeTable" element={<TimeTable/>}/>
             <Route path="/studentProfile" element={<StudentProfile/>}/>
+            <Route path="/profProfile" element={<ProfProfile/>}/>
             <Route path="/leaderboard" element={<LeaderBoard/>}/>
             <Route path="/joincall" element={<Joincall/>}/>
             <Route path="/conferencecall/:callid" element={<Conferencecall/>}/>

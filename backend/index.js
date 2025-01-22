@@ -12,6 +12,7 @@ import leaderboardRoute from './routes/Lbroutes.js'
 import studentProfileRoute from './routes/StudentProfileRoutes.js'
 import studentroutes from './routes/studentRoutes.js'
 import quizroutes from './routes/QuizRoutes.js'
+import profProfileRoute from './routes/ProfProfileRoutes.js'
 dotenv.config(); // Load environment variables
 
 const app = express();
@@ -27,7 +28,8 @@ app.use('/api/v1/timeTable', timeTableRoutes);
 app.use('/api/v1/attendance', attendanceRoutes);
 app.use('/api/v1/assignments',assignmentRoute);
 app.use('/api/v1/leaderboard',leaderboardRoute);
-app.use('/api/v1/studentProfile',studentProfileRoute)
+app.use('/api/v1/studentProfile',studentProfileRoute);
+app.use('/api/v1/profProfile',profProfileRoute);
 app.use('/api/v1/students',studentroutes);
 app.use('/api/v1/quiz',quizroutes);
 
