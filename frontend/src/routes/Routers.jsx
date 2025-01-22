@@ -26,6 +26,8 @@ import Joincall from '.././pages/Joincall';
 import Conferencecall from '.././pages/Conferencecall';
 import Createcall from '.././pages/Createcall';
 import ProfProfile from '../components/ProfProfile';
+import ForgotPassword from '../components/ForgotPasswordReqForm';
+import ResetPassword from '../components/ResetForgotPassword';
 
 const Routers = () => {
     return (
@@ -56,6 +58,8 @@ const Routers = () => {
             <Route path="/professor/attendance/:joinCode" element={<ShowAttendance />} />
             <Route path="/professor/attendance/:joinCode/:attendanceId" element={<Attendance />} />
             <Route path="/assignments/:assignmentId/evaluate" element={<EvaluateAssignment />} />
+            <Route path="/forgot-password" element={<ForgotPassword/>}/>
+            <Route path="/reset-password/:token" element={<ResetPassword/>}/>
         </Routes>
     );
 };

@@ -4,7 +4,7 @@ import { forgorpassfunc, resetpassfunc } from '../Controllers/ResetPasswordConto
 
 const router=express.Router()
 
-router.post('forgot-password',forgorpassfunc);
+router.post('/forgot-password',forgorpassfunc);
 router.put('/reset-password/:token',resetpassfunc);
   
 export default router

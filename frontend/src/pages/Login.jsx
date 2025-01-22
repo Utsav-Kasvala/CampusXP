@@ -114,6 +114,13 @@ const Login = () => {
               />
             </div>
 
+            {/* Forgot Password Link */}
+            <div className="mb-5 text-right">
+              <Link to="/forgot-password" className="text-blue-500 hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
+
             <div className="mt-7">
               <button
                 disabled={loading} // Disable button when loading
