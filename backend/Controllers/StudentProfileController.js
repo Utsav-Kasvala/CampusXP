@@ -1,4 +1,5 @@
 import Student from "../models/Student.js";
+import cloudinary from "../config/cloudinaryConfig.js";
 
 export const getStudentProfile = async (req, res) => {
   const { userId } = req.params;
@@ -49,6 +50,9 @@ export const updateStudentProfile = async (req, res) => {
 
 export const uploadProfilePic = async (req, res) => {
   const { userId } = req.params;
+  const file = req.file; // File uploaded through multer
+  //console.log(userId);
+  //console.log(req.file)
 
   try {
       const student = await Student.findOne({studentId: userId});
@@ -56,14 +60,25 @@ export const uploadProfilePic = async (req, res) => {
       if (!student) {
           return res.status(404).json({ message: 'Student not found' });
       }
-
+      
+      
       // Check if an image was uploaded
       if (!req.file) {
           return res.status(400).json({ message: 'No file uploaded. Please upload an image.' });
       }
 
+      // Upload file to Cloudinary if file exists
+              let fileUrl = null;
+              if (file) {
+                  const result = await cloudinary.uploader.upload(file.path, {
+                      resource_type: 'raw', // Use 'raw' for documents like PDFs
+                      folder: 'profilepics' // Optional: specify folder on Cloudinary
+                  });
+                  fileUrl = result.secure_url; // Cloudinary's file URL
+              }
       // Update the photo URL in the schema
-      student.photo = req.file.path; // Cloudinary URL
+      student.photo = fileUrl; // Cloudinary URL
+      //console.log(student.photo);
       await student.save();
 
       res.status(200).json({ message: 'Profile picture updated successfully', photo: student.photo });

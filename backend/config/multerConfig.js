@@ -26,14 +26,22 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Configure Multer with Cloudinary Storage
-const storageImg = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: 'student_profiles', // Cloudinary folder name
-        allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'], // Allowed file types
-    },
-});
+const imgFilter = (req, file, cb) => {
+    const allowedTypes = ['jpg', 'jpeg', 'png', 'pdf'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Only PDF files are allowed'), false);
+    }
+};
+// const storageImg = new CloudinaryStorage({
+//     cloudinary,
+//     params: {
+//         folder: 'student_profiles', // Cloudinary folder name
+//         allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'], // Allowed file types
+//     },
+// });
 
 // Initialize and export the upload middleware
 export  const upload = multer({ storage, fileFilter });
-export const uploadImg = multer({storageImg});
+export const uploadImg = multer({storage,imgFilter});
