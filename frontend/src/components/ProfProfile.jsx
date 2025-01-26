@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { authContext } from "../context/AuthContext";
 import { BASE_URL, token } from "../config";
-import profilepic from "../assets/images/profilepic.png";
+import defaultProfilePic from "../assets/images/profilepic.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProfProfile = () => {
   const { user } = useContext(authContext);
@@ -13,7 +15,10 @@ const ProfProfile = () => {
     email: "",
     phone: "",
   });
+  const [profilePic, setProfilePic] = useState(defaultProfilePic);
+  const [imageFile, setImageFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  
 
   const API_URL = `${BASE_URL}/profProfile`;
 
@@ -29,6 +34,7 @@ const ProfProfile = () => {
         }
         const data = await response.json();
         setProfile(data);
+        setProfilePic(data.photo || defaultProfilePic);
         setFormData({
           name: data.name,
           email: data.email,
@@ -47,28 +53,68 @@ const ProfProfile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSave = async () => {
-    try {
-      const response = await fetch(`${API_URL}/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message);
+  const handleUpload = async () => {
+      if (!imageFile) {
+        toast.error("Please select an image to upload.");
         return;
       }
+  
+      const formData = new FormData();
+      formData.append("photo", imageFile);
+  
+      try {
+        const response = await fetch(`${API_URL}/uploadProfilePic/${userId}`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to upload profile picture");
+        }
+  
+        const data = await response.json();
+        if (data.photo) {
+          setProfilePic(data.photo);
+          toast.success("Profile picture updated successfully!");
+        }
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        toast.error("Failed to upload profile picture. Please try again.");
+      }
+    };
 
-      setErrorMessage("");
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-  };
+  const handleSave = async () => {
+      try {
+        const response = await fetch(`${API_URL}/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          setErrorMessage(errorData.message);
+          return;
+        }
+  
+        setErrorMessage("");
+        setIsEditing(false);
+        toast.success("Profile updated successfully!");
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        toast.error("Failed to update profile. Please try again.");
+      }
+    };
+  
 
   if (!profile) {
     return (
@@ -156,17 +202,29 @@ const ProfProfile = () => {
         </div>
 
         {/* Right Section */}
-        <div className="w-full sm:w-1/3 p-6 flex flex-col items-center justify-center bg-gradient-to-br from-blue-300 to-blue-500 space-y-6">
-          <div className="w-40 h-40 bg-gray-300 rounded-full overflow-hidden border-4 border-blue-700 shadow-lg transform hover:rotate-6 transition duration-500">
+        <div className="w-full sm:w-1/3 p-6 flex flex-col items-center">
+          <div className="w-40 h-40 bg-gray-300 rounded-full overflow-hidden border-4 shadow-lg transform hover:rotate-6 transition duration-500">
             <img
-              src={profilepic}
+              src={profilePic}
               alt="Profile"
               className="w-full h-full object-cover"
             />
           </div>
-          <p className="text-blue-900 text-lg font-semibold">Profile Picture</p>
+          <input
+            type="file"
+            accept="image/*"
+            className="mt-4"
+            onChange={handleImageChange}
+          />
+          <button
+            onClick={handleUpload}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transform hover:scale-105 transition duration-300"
+          >
+            Upload
+          </button>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

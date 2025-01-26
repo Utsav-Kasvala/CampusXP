@@ -7,6 +7,9 @@ const ProfessorSchema = new mongoose.Schema({
     password: { type: String, required: true },
     name: { type: String, required: true },
     phone: { type: Number },
+    photo: { 
+        type: String 
+    },
     role: {
         type: String,
         default: 'professor', // Set default role to professor

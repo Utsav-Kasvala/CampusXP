@@ -126,7 +126,7 @@ const StudentProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-700 flex justify-center items-center">
       <div className="bg-gradient-to-r from-blue-400 via-blue-100 to-blue-200 shadow-xl rounded-lg w-full max-w-4xl flex flex-col sm:flex-row overflow-hidden transform transition duration-500 hover:scale-105">
         {/* Left Section */}
-        <div className="w-full sm:w-2/3 p-6">
+        <div className="w-full sm:w-2/3 p-6 flex-grow space-y-6 text-white">
           {isEditing ? (
             <div className="space-y-4">
               <input
@@ -174,9 +174,9 @@ const StudentProfile = () => {
           ) : (
             <div>
               <h1 className="text-3xl font-bold">{profile.name}</h1>
-              <p>Email: {profile.email}</p>
-              <p>Phone: {profile.phone}</p>
-              <p>Points: {profile.points}</p>
+                <p className="text-lg">Email: {profile.email}</p>
+                <p className="text-lg">Phone: {profile.phone}</p>
+                <p className="text-lg">Points: {profile.points}</p>
               <button
                 onClick={() => setIsEditing(true)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-700 transform hover:scale-105 transition duration-300"

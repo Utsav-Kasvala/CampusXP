@@ -1,4 +1,5 @@
 import Professor from "../models/Professor.js";
+import cloudinary from "../config/cloudinaryConfig.js";
 
 export const getProfProfile = async (req, res) => {
     const { userId } = req.params;
@@ -13,12 +14,13 @@ export const getProfProfile = async (req, res) => {
         return res.status(404).json({ message: "Profile not found" });
       }
 
-      console.log(profile)
+      //console.log(profile)
       // Return the profile along with populated classrooms
       res.json({
         name: profile.name,
         email: profile.email,
         phone: profile.phone,
+        photo: profile.photo,
         classrooms: profile.classrooms, // Include the populated classrooms
       });
     } catch (error) {
@@ -60,3 +62,44 @@ export const updateProfProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const uploadProfProfilePic = async (req, res) => {
+  const { userId } = req.params;
+  const file = req.file; // File uploaded through multer
+  //console.log(userId);
+  //console.log(req.file)
+
+  try {
+      const professor = await Professor.findOne({professorId: userId});
+
+      if (!professor) {
+          return res.status(404).json({ message: 'Professor not found' });
+      }
+      
+      
+      // Check if an image was uploaded
+      if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded. Please upload an image.' });
+      }
+
+      // Upload file to Cloudinary if file exists
+              let fileUrl = null;
+              if (file) {
+                  const result = await cloudinary.uploader.upload(file.path, {
+                      resource_type: 'raw', // Use 'raw' for documents like PDFs
+                      folder: 'profilepics' // Optional: specify folder on Cloudinary
+                  });
+                  fileUrl = result.secure_url; // Cloudinary's file URL
+              }
+      // Update the photo URL in the schema
+      professor.photo = fileUrl; // Cloudinary URL
+      //console.log(professor.photo);
+      await professor.save();
+
+      res.status(200).json({ message: 'Profile picture updated successfully', photo: professor.photo });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};
+
