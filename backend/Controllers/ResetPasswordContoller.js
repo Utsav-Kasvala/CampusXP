@@ -62,7 +62,7 @@ export const forgorpassfunc = async (req, res) => {
         //console.log('Protocol:', req.protocol); // Should be 'http' or 'https'
         //console.log('Host:', req.get('host')); // Should be 'localhost:5000' or your domain
 
-        const resetURL = `http://localhost:5174/reset-password/${resetToken}`;
+        const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
 
         const message = `Forgot your password? Reset it here: ${resetURL}`;
         //console.log(message);

@@ -46,3 +46,29 @@ export const updateStudentProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const uploadProfilePic = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+      const student = await Student.findOne({studentId: userId});
+
+      if (!student) {
+          return res.status(404).json({ message: 'Student not found' });
+      }
+
+      // Check if an image was uploaded
+      if (!req.file) {
+          return res.status(400).json({ message: 'No file uploaded. Please upload an image.' });
+      }
+
+      // Update the photo URL in the schema
+      student.photo = req.file.path; // Cloudinary URL
+      await student.save();
+
+      res.status(200).json({ message: 'Profile picture updated successfully', photo: student.photo });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};
