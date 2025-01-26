@@ -30,7 +30,7 @@ export const Header = () => {
 
   return (
     <header className="bg-gradient-to-r from-purple-900 to-blue-400  shadow-md fixed top-0 left-0 right-0 w-full z-50">
-      <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 py-6">
         <div className="flex-1">
           <Link to="/home" className="text-white text-2xl font-semibold tracking-wide hover:text-yellow-200 transition duration-300"> {/* Increased font size */}
             CampusXP

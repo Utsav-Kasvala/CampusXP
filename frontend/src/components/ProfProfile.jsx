@@ -4,6 +4,7 @@ import { BASE_URL, token } from "../config";
 import defaultProfilePic from "../assets/images/profilepic.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const ProfProfile = () => {
   const { user } = useContext(authContext);
@@ -18,6 +19,7 @@ const ProfProfile = () => {
   const [profilePic, setProfilePic] = useState(defaultProfilePic);
   const [imageFile, setImageFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate=useNavigate();
   
 
   const API_URL = `${BASE_URL}/profProfile`;
@@ -109,6 +111,7 @@ const ProfProfile = () => {
         setErrorMessage("");
         setIsEditing(false);
         toast.success("Profile updated successfully!");
+        navigate('/home')
       } catch (error) {
         console.error("Error updating profile:", error);
         toast.error("Failed to update profile. Please try again.");

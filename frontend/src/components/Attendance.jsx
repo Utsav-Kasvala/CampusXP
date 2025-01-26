@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const AttendancePage = () => {
     const { attendanceId } = useParams();
     const [attendance, setAttendance] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAttendance = async () => {
@@ -31,15 +32,19 @@ const AttendancePage = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.patch(
-                `${import.meta.env.VITE_API_BASE_URL}/attendance/update/${attendanceId}`,
-                { students: attendance.students }
-            );
-            alert(response.data.message);
+          const response = await axios.patch(
+            `${import.meta.env.VITE_API_BASE_URL}/attendance/update/${attendanceId}`,
+            { students: attendance.students }
+          );
+          alert(response.data.message);
+    
+          // Navigate to the desired route after successful update
+          navigate('/professor/classrooms');
         } catch (err) {
-            setError("Failed to update attendance. Please try again.");
+          setError("Failed to update attendance. Please try again.");
         }
-    };
+      };
+    
 
     return (
         <div className="flex flex-col items-center p-6 bg-gray-100 min-h-screen mt-20">
