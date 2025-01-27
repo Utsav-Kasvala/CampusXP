@@ -28,6 +28,8 @@ import Createcall from '.././pages/Createcall';
 import ProfProfile from '../components/ProfProfile';
 import ForgotPassword from '../components/ForgotPasswordReqForm';
 import ResetPassword from '../components/ResetForgotPassword';
+import ShowQuizzes from '../pages/ShowQuiz';
+import ClassroomQuizzes from '../pages/Quizpage'
 
 const Routers = () => {
     return (
@@ -60,6 +62,8 @@ const Routers = () => {
             <Route path="/assignments/:assignmentId/evaluate" element={<EvaluateAssignment />} />
             <Route path="/forgot-password" element={<ForgotPassword/>}/>
             <Route path="/reset-password/:token" element={<ResetPassword/>}/>
+            <Route path="/quizzes" element={<ShowQuizzes/>}/>
+            <Route path="/quizzes/:joinCode" element={< ClassroomQuizzes/>} />
         </Routes>
     );
 };

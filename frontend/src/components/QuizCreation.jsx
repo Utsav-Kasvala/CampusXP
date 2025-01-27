@@ -13,6 +13,7 @@ const QuizCreationPage = () => {
     options: ["", "", "", ""],
     correctOption: "",
   });
+  const [duration, setDuration] = useState(""); // Add state for quiz duration
   const navigate = useNavigate();
 
   const handleAddQuestion = () => {
@@ -29,8 +30,8 @@ const QuizCreationPage = () => {
   };
 
   const handleSaveQuiz = async () => {
-    if (!quizTitle || questions.length === 0) {
-      alert("Please provide a quiz title and add at least one question!");
+    if (!quizTitle || questions.length === 0 || !duration) {
+      alert("Please provide a quiz title, duration, and add at least one question!");
       return;
     }
 
@@ -39,6 +40,7 @@ const QuizCreationPage = () => {
         professorId: user.professorId,  // Send professorId from authContext
         joinCode,
         quizTitle,
+        duration, // Send duration to the backend
         questions,
       });
       alert("Quiz saved successfully!");
@@ -64,6 +66,15 @@ const QuizCreationPage = () => {
             placeholder="Quiz Title"
             value={quizTitle}
             onChange={(e) => setQuizTitle(e.target.value)}
+            className="mb-4 p-3 border border-gray-300 rounded-md w-full"
+          />
+        </div>
+        <div className="mb-6">
+          <input
+            type="number"
+            placeholder="Quiz Duration (in minutes)"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
             className="mb-4 p-3 border border-gray-300 rounded-md w-full"
           />
         </div>

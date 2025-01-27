@@ -3,9 +3,14 @@ import Professor from '../models/Professor.js';
 
 // Create a new quiz
 export const createQuiz = async (req, res) => {
-    const { professorId, joinCode, quizTitle, questions } = req.body;
+    const { professorId, joinCode, quizTitle, duration, questions } = req.body;
 
     try {
+
+        if (!duration || duration <= 0) {
+            return res.status(400).json({ error: "Invalid quiz duration" });
+        }
+
         // Check if professor exists
         const professor = await Professor.findOne({ professorId });
         if (!professor) {
@@ -17,6 +22,7 @@ export const createQuiz = async (req, res) => {
             professorId,
             joinCode,
             quizTitle,
+            duration,
             questions,
         });
 
@@ -33,6 +39,24 @@ export const createQuiz = async (req, res) => {
         return res.status(500).json({ error: "Failed to create quiz" });
     }
 };
+
+// Fetch quizzes by joinCode
+export const getQuizzesByJoinCode = async (req, res) => {
+    const { joinCode } = req.params;
+
+    try {
+        const quizzes = await Quiz.find({ joinCode }); // Fetch all quizzes with the given joinCode
+        //console.log(quizzes);
+        if (!quizzes || quizzes.length === 0) {
+            return res.status(404).json({ message: "No quizzes found for this classroom" });
+        }
+        res.status(200).json({ quizzes });
+    } catch (error) {
+        console.error("Error fetching quizzes:", error);
+        res.status(500).json({ error: "Failed to fetch quizzes" });
+    }
+};
+
 
 // // Fetch all quizzes by professorId (if needed for professor dashboard)
 // export const getQuizzesByProfessor = async (req, res) => {

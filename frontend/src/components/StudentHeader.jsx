@@ -41,6 +41,9 @@ const StudentHeader = () => {
           <Link to="/timeTable" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiCalendar className="mr-2" /> Timetable
           </Link>
+          <Link to="/quizzes" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
+            <FiActivity className="mr-2" /> Quizzes
+          </Link>
           <Link to="/leaderboard" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiStar className="mr-2" /> Leaderboard
           </Link>
