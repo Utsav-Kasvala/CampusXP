@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../config";
+import { Link } from "react-router-dom";
 
 const ClassroomQuizzes = () => {
     const { joinCode } = useParams(); // Extract joinCode from the URL
@@ -12,7 +13,7 @@ const ClassroomQuizzes = () => {
         const fetchQuizzes = async () => {
             try {
                 const response = await fetch(`${BASE_URL}/quiz/classroom/${joinCode}`);
-                
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch quizzes");
                 }
@@ -56,6 +57,11 @@ const ClassroomQuizzes = () => {
                                 <p className="mt-1 text-gray-700">
                                     <strong>Number of Questions:</strong> {quiz.questions.length}
                                 </p>
+                                <Link to={`/attempt-quiz/${quiz._id}`}>
+                                    <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                        Attempt Quiz
+                                    </button>
+                                </Link>
                             </li>
                         ))}
                     </ul>

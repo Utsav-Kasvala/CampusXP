@@ -57,6 +57,16 @@ export const getQuizzesByJoinCode = async (req, res) => {
     }
 };
 
+export const getQuizbyId = async (req, res) => {
+    //console.log(req.params.quizId);
+    try {
+        const quiz = await Quiz.findById(req.params.quizId);
+        res.status(200).json(quiz);
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching quiz" });
+    }
+};
+
 
 // // Fetch all quizzes by professorId (if needed for professor dashboard)
 // export const getQuizzesByProfessor = async (req, res) => {

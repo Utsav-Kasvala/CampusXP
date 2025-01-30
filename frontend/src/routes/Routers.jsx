@@ -30,6 +30,7 @@ import ForgotPassword from '../components/ForgotPasswordReqForm';
 import ResetPassword from '../components/ResetForgotPassword';
 import ShowQuizzes from '../pages/ShowQuiz';
 import ClassroomQuizzes from '../pages/Quizpage'
+import QuizAttemptPage from '../pages/AttemptQuiz'
 
 const Routers = () => {
     return (
@@ -64,6 +65,7 @@ const Routers = () => {
             <Route path="/reset-password/:token" element={<ResetPassword/>}/>
             <Route path="/quizzes" element={<ShowQuizzes/>}/>
             <Route path="/quizzes/:joinCode" element={< ClassroomQuizzes/>} />
+            <Route path="/attempt-quiz/:quizId" element={<QuizAttemptPage />} />
         </Routes>
     );
 };
