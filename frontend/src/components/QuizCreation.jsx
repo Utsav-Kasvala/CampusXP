@@ -2,10 +2,12 @@ import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { authContext } from "../context/AuthContext";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify"; // Corrected import
+import 'react-toastify/dist/ReactToastify.css'; // CSS import for toasts
 
 const QuizCreationPage = () => {
   const { joinCode } = useParams();
-  const { user } = useContext(authContext);  // Accessing user data from authContext
+  const { user } = useContext(authContext);
   const [quizTitle, setQuizTitle] = useState("");
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState({
@@ -13,7 +15,7 @@ const QuizCreationPage = () => {
     options: ["", "", "", ""],
     correctOption: "",
   });
-  const [duration, setDuration] = useState(""); // Add state for quiz duration
+  const [duration, setDuration] = useState("");
   const navigate = useNavigate();
 
   const handleAddQuestion = () => {
@@ -22,38 +24,40 @@ const QuizCreationPage = () => {
       currentQuestion.options.some((opt) => !opt) ||
       !currentQuestion.correctOption
     ) {
-      alert("Please fill in all fields for the question!");
+      toast.error("Please fill in all fields for the question!");
       return;
     }
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion({ text: "", options: ["", "", "", ""], correctOption: "" });
+    toast.success("Question added successfully!");
   };
 
   const handleSaveQuiz = async () => {
     if (!quizTitle || questions.length === 0 || !duration) {
-      alert("Please provide a quiz title, duration, and add at least one question!");
+      toast.error("Please provide a quiz title, duration, and add at least one question!");
       return;
     }
 
     try {
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/quiz/create`, {
-        professorId: user.professorId,  // Send professorId from authContext
+        professorId: user.professorId,
         joinCode,
         quizTitle,
-        duration, // Send duration to the backend
+        duration,
         questions,
       });
       alert("Quiz saved successfully!");
-      navigate(`/professor/subject/${joinCode}`);
+      navigate(`/professor/classrooms`);
     } catch (error) {
       console.error("Failed to save quiz:", error);
-      alert("Error saving quiz. Please try again.");
+      toast.error("Error saving quiz. Please try again.");
     }
   };
 
   const handleDeleteQuestion = (index) => {
     const updatedQuestions = questions.filter((_, i) => i !== index);
     setQuestions(updatedQuestions);
+    toast.success("Question deleted successfully!");
   };
 
   return (
@@ -135,7 +139,6 @@ const QuizCreationPage = () => {
           </button>
         </div>
 
-        {/* Display Added Questions */}
         {questions.length > 0 && (
           <div className="mt-8">
             <h2 className="text-xl font-semibold mb-4">Added Questions</h2>
@@ -145,9 +148,7 @@ const QuizCreationPage = () => {
                   key={index}
                   className="p-4 border border-gray-200 rounded-lg bg-gray-50"
                 >
-                  <p className="font-medium mb-2">{`${index + 1}. ${
-                    question.text
-                  }`}</p>
+                  <p className="font-medium mb-2">{`${index + 1}. ${question.text}`}</p>
                   <ul className="list-disc pl-6 mb-2">
                     {question.options.map((option, optIndex) => (
                       <li key={optIndex} className="text-gray-700">
@@ -170,6 +171,7 @@ const QuizCreationPage = () => {
           </div>
         )}
       </div>
+      <ToastContainer /> {/* Correct placement of ToastContainer */}
     </div>
   );
 };

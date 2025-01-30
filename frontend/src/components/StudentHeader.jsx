@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authContext } from '../context/AuthContext.jsx';
 import { FiHome, FiBook, FiCalendar, FiStar, FiLogOut, FiActivity ,FiVideo} from 'react-icons/fi';
+import { FaPuzzlePiece } from "react-icons/fa";
 
 const StudentHeader = () => {
   const { user, dispatch } = useContext(authContext);
@@ -42,7 +43,7 @@ const StudentHeader = () => {
             <FiCalendar className="mr-2" /> Timetable
           </Link>
           <Link to="/quizzes" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
-            <FiActivity className="mr-2" /> Quizzes
+            <FaPuzzlePiece className="mr-2" /> Quizzes
           </Link>
           <Link to="/leaderboard" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiStar className="mr-2" /> Leaderboard
