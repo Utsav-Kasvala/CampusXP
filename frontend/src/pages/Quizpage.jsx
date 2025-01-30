@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../config";
 import { Link } from "react-router-dom";
+import { authContext } from "../context/AuthContext";
 
 const ClassroomQuizzes = () => {
     const { joinCode } = useParams(); // Extract joinCode from the URL
+    const {user} = useContext(authContext)
+    const userId = user.studentId;
     const [quizzes, setQuizzes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,7 +15,7 @@ const ClassroomQuizzes = () => {
     useEffect(() => {
         const fetchQuizzes = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/quiz/classroom/${joinCode}`);
+                const response = await fetch(`${BASE_URL}/quiz/classroom/${joinCode}/${userId}`);
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch quizzes");
@@ -20,7 +23,9 @@ const ClassroomQuizzes = () => {
 
                 const data = await response.json();
                 console.log(data);
-                setQuizzes(data.quizzes);
+                setQuizzes(data.
+                    unattemptedQuizzes
+                    );
             } catch (err) {
                 console.error("Error fetching quizzes:", err);
                 setError("Failed to fetch quizzes. Please try again later.");

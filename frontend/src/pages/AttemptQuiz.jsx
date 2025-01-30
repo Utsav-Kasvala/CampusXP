@@ -12,6 +12,9 @@ const QuizAttemptPage = () => {
     const [answers, setAnswers] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [score, setScore] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [quizhide,setQuizHide] = useState(false)
 
     useEffect(() => {
         const fetchQuiz = async () => {
@@ -37,19 +40,30 @@ const QuizAttemptPage = () => {
     };
 
     const handleSubmit = async () => {
+        setIsSubmitting(true);
         try {
-            await axios.post(`${BASE_URL}/quiz/attempt`, {
+            const response = await axios.post(`${BASE_URL}/quiz/attempt`, {
                 studentId,
                 quizId,
                 answers,
             });
-            alert("Quiz submitted successfully!");
-            navigate("/dashboard");
+    
+            setScore(response.data.score);
+    
+            // Remove quiz from UI after submission
+            setQuizHide(true);
         } catch (error) {
             console.error("Error submitting quiz:", error);
             alert("Failed to submit quiz.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
+
+    const navigatetoQuiz =async () => {
+        navigate('/quizzes');
+    }
+    
 
     if (loading) return <p className="text-center mt-20 text-lg font-semibold">Loading quiz...</p>;
     if (error) return <p className="text-center mt-20 text-red-600">{error}</p>;
@@ -58,7 +72,7 @@ const QuizAttemptPage = () => {
         <div className="max-w-3xl mx-auto mt-24 p-8 bg-white rounded-lg shadow-lg border">
             <h2 className="text-3xl font-bold mb-6 text-center">{quiz.quizTitle}</h2>
 
-            {quiz.questions.map((question, index) => (
+            {!quizhide && quiz.questions.map((question, index) => (
                 <div key={index} className="mb-6 p-4 bg-gray-100 rounded-lg">
                     <p className="font-semibold mb-2">{index + 1}. {question.text}</p>
                     <div className="flex flex-col gap-2">
@@ -85,12 +99,23 @@ const QuizAttemptPage = () => {
                 </div>
             ))}
 
-            <button
-                onClick={handleSubmit}
-                className="w-full mt-6 py-3 bg-green-600 text-white text-lg font-semibold rounded-md hover:bg-green-700 transition"
-            >
-                Submit Quiz
-            </button>
+            {score !== null ? (
+                <div className="text-center mt-6">
+                    <p className="text-xl font-bold text-green-600">Your Score: {score} / {quiz.questions.length}</p>
+                    <p className="text-xl font-bold text-green-600">Your Score has been updated on leaderBoard, please check it</p>
+                    <button className="w-full mt-6 py-3 text-white text-lg font-semibold rounded-md transition bg-green-600 hover:bg-green-700" onClick={navigatetoQuiz}>Go back to Quiz</button>
+                </div>
+            ) : (
+                <button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className={`w-full mt-6 py-3 text-white text-lg font-semibold rounded-md transition ${
+                        isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+                    }`}
+                >
+                    {isSubmitting ? "Submitting..." : "Submit Quiz"}
+                </button>
+            )}
         </div>
     );
 };

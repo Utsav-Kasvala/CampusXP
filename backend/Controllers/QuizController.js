@@ -1,5 +1,7 @@
 import Quiz from '../models/Quiz.js';
 import Professor from '../models/Professor.js';
+import QuizResponse from '../models/QuizResponse.js';
+import Student from '../models/Student.js';
 
 // Create a new quiz
 export const createQuiz = async (req, res) => {
@@ -42,15 +44,20 @@ export const createQuiz = async (req, res) => {
 
 // Fetch quizzes by joinCode
 export const getQuizzesByJoinCode = async (req, res) => {
-    const { joinCode } = req.params;
+    const { joinCode, studentId } = req.params;
 
     try {
-        const quizzes = await Quiz.find({ joinCode }); // Fetch all quizzes with the given joinCode
+        const attemptedQuizIds = await QuizResponse.find({ studentId }).distinct("quizId");
+        //console.log(attemptedQuizIds)
+
+        const unattemptedQuizzes = await Quiz.find({ joinCode, _id: { $nin: attemptedQuizIds } });
+        //console.log(unattemptedQuizzes)
+        
         //console.log(quizzes);
-        if (!quizzes || quizzes.length === 0) {
-            return res.status(404).json({ message: "No quizzes found for this classroom" });
-        }
-        res.status(200).json({ quizzes });
+        // if (!unattemptedQuizzes || unattemptedQuizzes.length===0) {
+        //     return res.status(404).json({ message: "No quizzes found for this classroom" });
+        // }
+        res.status(200).json({ unattemptedQuizzes });
     } catch (error) {
         console.error("Error fetching quizzes:", error);
         res.status(500).json({ error: "Failed to fetch quizzes" });
@@ -64,6 +71,39 @@ export const getQuizbyId = async (req, res) => {
         res.status(200).json(quiz);
     } catch (error) {
         res.status(500).json({ error: "Error fetching quiz" });
+    }
+};
+
+export const submitQuizAttempt = async (req, res) => {
+    const { studentId, quizId, answers } = req.body;
+
+    try {
+        const quiz = await Quiz.findById(quizId);
+        if (!quiz) return res.status(404).json({ error: "Quiz not found" });
+
+        let score = 0;
+        quiz.questions.forEach((q, index) => {
+            if (answers[index] === q.correctOption) {
+                score++;
+            }
+        });
+
+        const student = await Student.findOne({studentId});
+        student.points+=score;
+        await student.save();
+
+        const newResponse = new QuizResponse({
+            studentId,
+            quizId,
+            answers,
+            score,
+        });
+
+        await newResponse.save();
+        res.status(201).json({ message: "Quiz submitted successfully", score });
+    } catch (error) {
+        console.error("Error submitting quiz:", error);
+        res.status(500).json({ error: "Failed to submit quiz" });
     }
 };
 
