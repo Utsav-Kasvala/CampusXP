@@ -24,8 +24,9 @@ const JoinClassroom = () => {
 
             setMessage('Joined classroom successfully!'); // Success message
 
-            // Optionally, redirect or perform additional actions
-            // navigate(`/some-page`);
+            // Refresh the current page ("/allclassrooms")
+            navigate(0);  // This will reload the current page
+
         } catch (error) {
             // Error handling for various cases
             console.log(error);

@@ -33,14 +33,8 @@ const StudentHeader = () => {
           <Link to="/studentdashboard" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiBook className="mr-2" /> Dashboard
           </Link>
-          <Link to="/join-classroom" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
-            <FiBook className="mr-2" /> Join a Classroom
-          </Link>
-          <Link to="/joined-classrooms" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
-            <FiActivity className="mr-2" /> Joined Classroom
-          </Link>
-          <Link to="/timeTable" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
-            <FiCalendar className="mr-2" /> Timetable
+          <Link to="/allclassrooms" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
+            <FiActivity className="mr-2" /> Classrooms
           </Link>
           <Link to="/quizzes" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FaPuzzlePiece className="mr-2" /> Quizzes
