@@ -98,7 +98,7 @@ export const create=asyncHandler(async (req, res) => {
 
 export const CreatedClass=asyncHandler(async (req, res) => {
     const { professorId } = req.params;
-    console.log(professorId);
+    //console.log(professorId);
     try {
         const professor = await Professor.findOne({ professorId }).populate('classrooms'); // Populate to get classroom details
         if (!professor) {

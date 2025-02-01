@@ -4,10 +4,9 @@ import { BASE_URL } from "../config";
 import { Link } from "react-router-dom";
 import { authContext } from "../context/AuthContext";
 
-const ClassroomQuizzes = () => {
-    const { joinCode } = useParams(); // Extract joinCode from the URL
+const QuizResShow = () => {
+    const { subjectName, joinCode } = useParams(); // Extract joinCode from the URL
     const {user} = useContext(authContext)
-    const userId = user.studentId;
     const [quizzes, setQuizzes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,20 +14,20 @@ const ClassroomQuizzes = () => {
     useEffect(() => {
         const fetchQuizzes = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/quiz/classroom/${joinCode}/${userId}`);
+                const response = await fetch(`${BASE_URL}/quiz/result/${joinCode}`);
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch quizzes");
+                    throw new Error("Failed to fetch A/NA quizzes");
                 }
 
                 const data = await response.json();
                 //console.log(data);
                 setQuizzes(data.
-                    unattemptedQuizzes
+                    quizzes
                     );
             } catch (err) {
-                console.error("Error fetching quizzes:", err);
-                setError("Failed to fetch quizzes. Please try again later.");
+                console.error("Error fetching A/NA quizzes:", err);
+                setError("Failed to fetch A/NA quizzes. Please try again later.");
             } finally {
                 setLoading(false);
             }
@@ -41,11 +40,8 @@ const ClassroomQuizzes = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100 mt-14">
             <div className="max-w-3xl w-full px-8 py-12 bg-white rounded-lg shadow-lg">
                 <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">
-                    Quizzes for Classroom
+                    Quizzes for <strong>{subjectName}</strong>
                 </h2>
-                <p className="text-lg mb-6 text-center text-gray-700">
-                    <strong>Join Code:</strong> {joinCode}
-                </p>
 
                 {loading ? (
                     <p className="text-center text-gray-600">Loading quizzes...</p>
@@ -62,9 +58,9 @@ const ClassroomQuizzes = () => {
                                 <p className="mt-1 text-gray-700">
                                     <strong>Number of Questions:</strong> {quiz.questions.length}
                                 </p>
-                                <Link to={`/attempt-quiz/${quiz._id}`}>
+                                <Link to={`/quiz/studentResults/${quiz._id}`}>
                                     <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                        Attempt Quiz
+                                        Show Quiz Result
                                     </button>
                                 </Link>
                             </li>
@@ -80,4 +76,4 @@ const ClassroomQuizzes = () => {
     );
 };
 
-export default ClassroomQuizzes;
+export default QuizResShow;

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authContext } from '../context/AuthContext.jsx';
 import { FiHome, FiBook, FiPlusSquare, FiLogOut,FiVideo } from 'react-icons/fi';
+import { FaPuzzlePiece } from 'react-icons/fa';
 
 const ProfessorHeader = () => {
   const { user, dispatch } = useContext(authContext);
@@ -39,6 +40,9 @@ const ProfessorHeader = () => {
           </Link>
           <Link to="/professor/classrooms" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiBook className="mr-2" /> Classrooms
+          </Link>
+          <Link to="/quizResultPage" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
+            <FaPuzzlePiece className="mr-2" /> QuizResults
           </Link>
           <Link to="/joincall" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiVideo className="mr-2" /> Create Call
