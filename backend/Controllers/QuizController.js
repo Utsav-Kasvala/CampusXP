@@ -153,20 +153,3 @@ export const submitQuizAttempt = async (req, res) => {
     }
 };
 
-
-// // Fetch all quizzes by professorId (if needed for professor dashboard)
-// export const getQuizzesByProfessor = async (req, res) => {
-//     const { professorId } = req.params;
-
-//     try {
-//         const quizzes = await Quiz.find({ professorId });
-//         if (!quizzes) {
-//             return res.status(404).json({ message: "No quizzes found for this professor" });
-//         }
-
-//         return res.status(200).json({ quizzes });
-//     } catch (error) {
-//         console.error("Error fetching quizzes:", error);
-//         return res.status(500).json({ error: "Failed to fetch quizzes" });
-//     }
-// };

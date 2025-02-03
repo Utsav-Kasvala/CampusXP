@@ -98,31 +98,6 @@ export const submitAssignment = async (req, res) => {
     }
 };
 
-// export const getAssignmentSubmissions = async (req, res) => {
-//     const { assignmentId } = req.params;
-//     console.log(assignmentId);
-//     try {
-//         const assignment = await Assignment.findById(assignmentId).populate({
-//             path: 'submissions.student',
-//             select: 'name', // Select only the student's name
-//         });
-
-//         if (!assignment) {
-//             return res.status(404).json({ message: 'Assignment not found.' });
-//         }
-
-//         const submissionDetails = assignment.submissions.map((submission) => ({
-//             studentName: submission.student.name,
-//             submissionDate: submission.submissionDate,
-//             fileUrl: submission.fileUrl,
-//         }));
-
-//         res.status(200).json({ submissions: submissionDetails });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Server error. Please try again later.' });
-//     }
-// };
 export const getAssignmentSubmissions = async (req, res) => {
     const { assignmentId } = req.params;
     console.log(assignmentId); // Debugging: Log the assignmentId for verification

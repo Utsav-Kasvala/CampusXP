@@ -60,7 +60,7 @@ export const getattendancefromjoincode=async (req, res) => {
         }
         res.status(200).json({ attendance: attendanceRecords });
     } catch (error) {
-        console.error(error);
+       // console.error(error);
         res.status(500).json({ message: 'Failed to retrieve attendance records.', error: error.message });
     }
 };

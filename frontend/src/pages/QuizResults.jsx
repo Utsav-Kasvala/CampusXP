@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { authContext } from "../context/AuthContext";
 import axios from "axios";
-
+import StarField from "../components/StarField";
 const QuizResPage = () => {
   const { professorId } = useParams();
   const { user } = useContext(authContext);
@@ -27,8 +27,13 @@ const QuizResPage = () => {
   }, [user.professorId]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6 mt-20">
-      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
+    // <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6 mt-20">
+    // <StarField/> 
+    //   <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
+    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
+    <StarField/>
+    <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-90">
+
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Quizzes Courses
         </h1>

@@ -13,6 +13,7 @@ const Structure = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Conditionally render the Header */}
+      
       {!shouldHideHeaderFooter && <Header />}
       <main className="flex-grow">
         <Routers />
