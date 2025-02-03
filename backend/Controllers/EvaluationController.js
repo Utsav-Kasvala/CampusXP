@@ -31,7 +31,7 @@ export const evaluateSubmission = async (req, res) => {
         // Retrieve the student based on the submission's `student` field
         const student = await Student.findById(submission.student);
         if (!student) {
-            console.log("Student not found");
+           // console.log("Student not found");
             return res.status(404).json({ message: "Student not found." });
         }
 
