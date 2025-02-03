@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ const JoinedClassrooms = () => {
         const fetchJoinedClassrooms = async () => {
             if (!studentId) return;
             try {
-                const res = await axios.get(`${BASE_URL}/classrooms/joined/${studentId}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/classrooms/joined/${studentId}`);
                 setClassrooms(res.data.classrooms);
             } catch (error) {
                 console.error("Error fetching joined classrooms:", error);
@@ -26,7 +25,7 @@ const JoinedClassrooms = () => {
     }, [studentId]);
 
     return (
-        <div className="max-w-2xl mx-auto p-4 bg-white rounded shadow-md mt-40">
+        <div className="max-w-2xl mx-auto p-4 bg-white mt-10">
             <h2 className="text-2xl font-bold mb-4 text-center">Joined Classrooms</h2>
             <p className="text-lg mb-2"><strong>Student Name:</strong> {studentName}</p>
             <p className="text-lg mb-4"><strong>Student ID:</strong> {studentId}</p>

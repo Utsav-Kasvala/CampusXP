@@ -7,6 +7,7 @@ import loginImg from '../assets/images/login.gif'
 
 
 
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -70,7 +71,8 @@ const Login = () => {
   };
 
 
-  return (
+  return ( 
+
     <section className="flex h-screen ">
       {/* Left Image Section */}
       <div className="hidden lg:block w-1/2 ">

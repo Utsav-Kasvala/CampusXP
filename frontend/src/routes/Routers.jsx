@@ -44,7 +44,6 @@ const Routers = () => {
             <Route path="/register" element={<Signup />} />
             <Route path="/studentdashboard" element={<ProtectedRoute allowedRoles={['student']}><StudentDashboard /></ProtectedRoute>} />
             <Route path="/professordashboard" element={<ProtectedRoute allowedRoles={['professor']}><ProfessorDashboard /></ProtectedRoute>} />
-            
             <Route path="/allclassrooms" element={<ProtectedRoute allowedRoles={['student']}><Joinandjoined /></ProtectedRoute>} /> {/* New route */}
             <Route path="/professor/classrooms" element={<CreatedClasses/>} />
             <Route path="/professor/subject/:subjectName" element={<SubjectDetail/>} />
