@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { FaBook, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa'; // Importing React Icons
+import { FaBook, FaChalkboardTeacher, FaClipboardList, FaUserGraduate } from 'react-icons/fa'; // Importing React Icons
 
 const JoinedClassrooms = () => {
     const { studentId, user: { name: studentName } = {} } = useAuth();
@@ -28,8 +28,8 @@ const JoinedClassrooms = () => {
     return (
         <div className="max-w-2xl mx-auto p-6 rounded-2xl  bg-white mt-10 hover:shadow-lg transition-all transform hover:scale-105">
 
-            {/* Title */}
-            <h2 className="text-3xl font-semibold text-blue-700 text-center mb-6 drop-shadow-lg">Joined Classrooms</h2>
+            {/* Title
+            <h2 className="text-3xl font-semibold text-blue-700 text-center mb-6 drop-shadow-lg">Joined Classrooms</h2> */}
 
 
             {/* Loading or Displaying Classrooms */}
@@ -61,9 +61,9 @@ const JoinedClassrooms = () => {
                                 </div>
                                 <Link
                                     to={`/subject/${classroom._id}?studentId=${studentId}`}
-                                    className="text-blue-600 hover:text-blue-800 font-semibold mt-2 inline-block"
+                                    className="flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-95 mt-2"
                                 >
-                                    View Details
+                                    <FaClipboardList className="text-lg" /> View Assignments
                                 </Link>
                             </li>
                         ))}
