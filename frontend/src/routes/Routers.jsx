@@ -68,7 +68,8 @@ const Routers = () => {
             <Route path="/attempt-quiz/:quizId" element={<QuizAttemptPage />} />
             <Route path="/quizResultPage" element={<QuizResPage/>} />
             <Route path="/quizResutShow/:subjectName/:joinCode" element={<QuizResShow/>} />
-            <Route path="quiz/studentResults/:quizId" element={<ShowQuizResStu/>} />
+            <Route path="/quiz/studentResults/:quizId" element={<ShowQuizResStu/>} />
+            <Route path="/timeTable" element={<TimeTable/>} />
         </Routes>
     );
 };
