@@ -50,11 +50,7 @@ const CreatedClasses = () => {
   };
 
   return (
-    // <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-    //   <StarField /> {/* Use the external StarField component */}
-    //   <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-80">
-    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-    <StarField />
+     <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
     <div className="relative z-10 w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-95">
         <h1 className="text-4xl font-extrabold text-blue-700 mb-6 text-center">Created Classes</h1>
         <div className="text-lg font-medium mb-4 text-center">

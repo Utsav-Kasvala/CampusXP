@@ -79,13 +79,6 @@ const AttendancePage = () => {
 
     return (
         <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 p-6">
-            {/* StarField Background */}
-            <div className="absolute inset-0 z-0">
-                <Canvas camera={{ position: [0, 0, 5] }}>
-                    <StarField />
-                </Canvas>
-            </div>
-
             {/* Attendance Content */}
             <div className="relative z-10 w-full max-w-2xl bg-white bg-opacity-90 backdrop-blur-md shadow-2xl rounded-2xl p-8">
                 <h1 className="text-2xl font-bold mb-6 text-center">Take Attendance for Session</h1>

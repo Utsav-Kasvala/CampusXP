@@ -40,7 +40,6 @@ const QuizResShow = () => {
         // <div className="flex items-center justify-center min-h-screen bg-gray-100 mt-14">
         //     <div className="max-w-3xl w-full px-8 py-12 bg-white rounded-lg shadow-lg">
         <div className="relative min-h-screen justify-center flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-        <StarField/>
         <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-90">
 
                 <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">

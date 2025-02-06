@@ -29,7 +29,6 @@ const ViewAssignments = () => {
 
     return (
         <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-            <StarField />
             <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-90">
                 <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">📚 Assignments for Join Code: {joinCode}</h1>
                 
