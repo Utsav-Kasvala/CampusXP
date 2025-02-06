@@ -199,7 +199,37 @@ export const getClassroomByJoinCode = async (req, res) => {
         res.status(500).json({ message: 'Failed to retrieve classroom details.' });
     }
 };
-// Join Classroom
+// // Join Classroom
+// export const join = asyncHandler(async (req, res) => {
+//     const { code, studentId, studentName } = req.body;
+
+//     if (!code || !studentId || !studentName) {
+//         return res.status(400).json({ message: "Join code, student ID, and student name are required." });
+//     }
+
+//     // Find the classroom by joinCode
+//     const classroom = await Classroom.findOneAndUpdate(
+//         { joinCode: code },
+//         { $addToSet: { students: { id: studentId, name: studentName } } },
+//         { new: true }
+//     );
+
+//     if (!classroom) {
+//         return res.status(404).json({ message: "Classroom not found" });
+//     }
+
+//     // Add classroom reference to the student's classrooms array
+//     await Student.findOneAndUpdate(
+//         { studentId },
+//         { $addToSet: { classrooms: classroom._id } },
+//         { new: true }
+//     );
+
+    
+
+//     res.status(200).json({ message: "Joined classroom successfully.", classroom });
+// });
+
 export const join = asyncHandler(async (req, res) => {
     const { code, studentId, studentName } = req.body;
 
@@ -208,15 +238,25 @@ export const join = asyncHandler(async (req, res) => {
     }
 
     // Find the classroom by joinCode
-    const classroom = await Classroom.findOneAndUpdate(
-        { joinCode: code },
-        { $addToSet: { students: { id: studentId, name: studentName } } },
-        { new: true }
-    );
+    const classroom = await Classroom.findOne({ joinCode: code });
 
     if (!classroom) {
         return res.status(404).json({ message: "Classroom not found" });
     }
+
+    // Check if the student is already in the classroom
+    const studentAlreadyJoined = classroom.students.some(student => student.id === studentId);
+
+    if (studentAlreadyJoined) {
+        return res.status(400).json({ message: "Student has already joined this classroom." });
+    }
+
+    // Add student to the classroom
+    await Classroom.findOneAndUpdate(
+        { joinCode: code },
+        { $addToSet: { students: { id: studentId, name: studentName } } },
+        { new: true }
+    );
 
     // Add classroom reference to the student's classrooms array
     await Student.findOneAndUpdate(
@@ -225,11 +265,8 @@ export const join = asyncHandler(async (req, res) => {
         { new: true }
     );
 
-    
-
     res.status(200).json({ message: "Joined classroom successfully.", classroom });
 });
-
 
 export const joined=asyncHandler(async (req, res) => {
     const { studentId } = req.params;
