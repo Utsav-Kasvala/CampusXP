@@ -10,7 +10,7 @@ export const getLeaderboard = async (req, res) => {
 
         res.status(200).json({ students });
     } catch (error) {
-        console.error("Error fetching leaderboard:", error);
+        //console.error("Error fetching leaderboard:", error);
         res.status(500).json({ message: 'Failed to fetch leaderboard data.' });
     }
 };

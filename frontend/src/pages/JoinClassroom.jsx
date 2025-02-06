@@ -4,63 +4,50 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const JoinClassroom = () => {
-    // State for classroom code input and join status message
     const [code, setCode] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    const { user, studentId } = useAuth(); // Access user and studentId from context
+    const { user, studentId } = useAuth();
 
-    // Function to handle the classroom join process
     const handleJoin = async (e) => {
         e.preventDefault();
-
         try {
-            // Send join request to the server with classroom code, student ID, and name
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/classrooms/join`, {
                 code,
-                studentId: studentId, // Use the studentId from context
+                studentId: studentId, 
                 studentName: user?.name,
             });
-
-            setMessage('Joined classroom successfully!'); // Success message
-
-            // Refresh the current page ("/allclassrooms")
-            navigate(0);  // This will reload the current page
-
+            setMessage('Joined classroom successfully!');
+            navigate(0);
         } catch (error) {
-            // Error handling for various cases
-            console.log(error);
-            if (error.response && error.response.status === 404) {
-                setMessage('Invalid code. Please check and try again.');
-            } else {
-                setMessage('Error joining classroom. Please try again later.');
-            }
+            setMessage(error.response?.status === 404 ? 'Invalid code. Please check and try again.' : 'Error joining classroom. Please try again later.');
         }
     };
 
     return (
-        <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md mt-40">
-            <h2 className="text-2xl font-bold mb-4 text-center">Join Classroom</h2>
-            {/* Display the student's name */}
-            <p className="text-lg mb-4 text-center">Student Name: {user?.name}</p>
-            <form onSubmit={handleJoin} className="flex flex-col">
+        <div className="bg-white shadow-md rounded-lg p-4">
+            <h2 className="text-lg font-bold text-center mb-2">Join Classroom</h2>
+            <form onSubmit={handleJoin} className="flex flex-col space-y-2">
                 <input 
                     type="text" 
-                    placeholder="Enter Classroom Code" 
+                    placeholder="Classroom Code" 
                     value={code} 
                     onChange={(e) => setCode(e.target.value)} 
                     required 
-                    className="border border-gray-300 rounded p-2 mb-4"
+                    className="border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
                 <button 
                     type="submit" 
-                    className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                    className="bg-blue-500 text-white py-1 rounded-md text-sm hover:bg-blue-600 transition-all"
                 >
                     Join
                 </button>
             </form>
-            {/* Display any message (success or error) */}
-            {message && <p className={`mt-4 text-center ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
+            {message && (
+                <p className={`mt-2 text-center text-sm font-medium ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
+                    {message}
+                </p>
+            )}
         </div>
     );
 };

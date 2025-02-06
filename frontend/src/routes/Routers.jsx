@@ -1,5 +1,5 @@
 // routes/Routers.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { Routes, Route } from 'react-router-dom';  
 import Home from '../pages/Home';
 import Login from '../pages/Login';
@@ -34,17 +34,22 @@ import QuizAttemptPage from '../pages/AttemptQuiz'
 import QuizResPage from '../pages/QuizResults';
 import QuizResShow from '../pages/QuizResultShow';
 import ShowQuizResStu from '../pages/ShowQuizStudentResults';
+import { authContext } from '../context/AuthContext';
 
 const Routers = () => {
+    const {user} =useContext(authContext);
     return (
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Signup />} />
+            {!user && (
+            <>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Signup />} />
+            </>
+        )}
             <Route path="/studentdashboard" element={<ProtectedRoute allowedRoles={['student']}><StudentDashboard /></ProtectedRoute>} />
             <Route path="/professordashboard" element={<ProtectedRoute allowedRoles={['professor']}><ProfessorDashboard /></ProtectedRoute>} />
-            
             <Route path="/allclassrooms" element={<ProtectedRoute allowedRoles={['student']}><Joinandjoined /></ProtectedRoute>} /> {/* New route */}
             <Route path="/professor/classrooms" element={<CreatedClasses/>} />
             <Route path="/professor/subject/:subjectName" element={<SubjectDetail/>} />
@@ -69,7 +74,8 @@ const Routers = () => {
             <Route path="/attempt-quiz/:quizId" element={<QuizAttemptPage />} />
             <Route path="/quizResultPage" element={<QuizResPage/>} />
             <Route path="/quizResutShow/:subjectName/:joinCode" element={<QuizResShow/>} />
-            <Route path="quiz/studentResults/:quizId" element={<ShowQuizResStu/>} />
+            <Route path="/quiz/studentResults/:quizId" element={<ShowQuizResStu/>} />
+            <Route path="/timeTable" element={<TimeTable/>} />
         </Routes>
     );
 };

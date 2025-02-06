@@ -1,10 +1,8 @@
-import React, { useContext, Suspense, useRef, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { authContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
-import { FaChalkboardTeacher, FaBook, FaClipboardList, FaUsers } from "react-icons/fa";
-import { IoMdAddCircle } from "react-icons/io";
+import { FaChalkboardTeacher, FaUserGraduate, FaTasks, FaPaperPlane } from "react-icons/fa";
 
 // Starfield Animation
 const StarField = () => {
@@ -13,18 +11,18 @@ const StarField = () => {
     const speeds = new Float32Array(numStars);
 
     for (let i = 0; i < numStars; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 20; // X position
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 20; // Y position
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // Z position (depth)
-        speeds[i] = Math.random() * 0.002 + 0.0005; // Different twinkle speeds
+        positions[i * 3] = (Math.random() - 0.5) * 20;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+        speeds[i] = Math.random() * 0.002 + 0.0005;
     }
 
     const pointsRef = useRef();
     useFrame(() => {
         if (pointsRef.current) {
             for (let i = 0; i < numStars; i++) {
-                positions[i * 3 + 2] += speeds[i]; // Move stars forward
-                if (positions[i * 3 + 2] > 10) positions[i * 3 + 2] = -10; // Reset star depth
+                positions[i * 3 + 2] += speeds[i];
+                if (positions[i * 3 + 2] > 10) positions[i * 3 + 2] = -10;
             }
             pointsRef.current.geometry.attributes.position.needsUpdate = true;
         }
@@ -39,10 +37,51 @@ const StarField = () => {
 
 const ProfessorDashboard = () => {
     const { user } = useContext(authContext);
+    const [classrooms, setClassrooms] = useState([]);
+    const [notifications, setNotifications] = useState({});
+
+    useEffect(() => {
+        const fetchClassrooms = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/classrooms/dashboard`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ professorId: user?.professorId }),
+                });
+
+                const data = await response.json();
+                console.log("Fetched Classrooms:", data);
+
+                if (Array.isArray(data.classrooms)) {
+                    setClassrooms(data.classrooms);
+                } else {
+                    setClassrooms([]);
+                }
+            } catch (error) {
+                console.error("Error fetching classrooms:", error);
+                setClassrooms([]);
+            }
+        };
+
+        if (user?.professorId) fetchClassrooms();
+    }, [user]);
+
+    const handleNotificationChange = (classroomId, event) => {
+        setNotifications((prev) => ({
+            ...prev,
+            [classroomId]: event.target.value,
+        }));
+    };
+
+    const handleNotificationSubmit = (classroomId) => {
+        alert(`Notification sent for Classroom ID: ${classroomId} - Message: ${notifications[classroomId] || ""}`);
+    };
 
     return (
         <div className="relative min-h-screen bg-gradient-to-r from-indigo-900 to-blue-700 flex flex-col items-center p-6 mt-16">
-            {/* 3D Star Background */}
+            {/* Starfield Background */}
             <div className="absolute inset-0 z-0">
                 <Canvas camera={{ position: [0, 0, 5] }}>
                     <Suspense fallback={null}>
@@ -51,79 +90,66 @@ const ProfessorDashboard = () => {
                 </Canvas>
             </div>
 
-            {/* Content Section */}
-            <div className="relative z-10 w-full max-w-6xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-80">
-                <h1 className="text-4xl font-extrabold text-blue-700 mb-10 text-center">Professor Dashboard</h1>
+            {/* Content */}
+            <div className="relative z-10 w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-80">
+                <h1 className="text-4xl font-extrabold text-blue-700 mb-10 text-center flex items-center justify-center gap-3">
+                    <FaChalkboardTeacher className="text-indigo-600" /> Professor Dashboard
+                </h1>
 
                 {/* Professor Info */}
-                <div className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-xl mb-10">
-                    <div>
-                        <p className="text-2xl font-semibold">Welcome, {user?.name}!</p>
-                        <p className="text-lg"><strong>Professor ID:</strong> {user?.professorId}</p>
-                    </div>
-                    <FaChalkboardTeacher className="text-6xl transform scale-110" />
+                <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-xl mb-10 text-center">
+                    <p className="text-2xl font-semibold">Welcome, {user?.name}!</p>
+                    <p className="text-lg flex items-center justify-center gap-2">
+                        <FaChalkboardTeacher className="text-yellow-300" /> <strong>Professor ID:</strong> {user?.professorId}
+                    </p>
                 </div>
 
-                {/* Quick Stats Section */}
-                <div className="grid grid-cols-3 gap-6 mb-10">
-                    <div className="bg-white p-6 rounded-2xl shadow-2xl flex items-center justify-between border-l-4 border-blue-500 hover:scale-105 transition transform">
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-700">Total Classes</h3>
-                            <p className="text-2xl font-bold text-blue-600">5</p>
-                        </div>
-                        <FaBook className="text-blue-500 text-5xl" />
-                    </div>
+                {/* Classrooms Section */}
+                <h2 className="text-3xl font-semibold text-gray-700 mb-5 flex items-center gap-2">
+                    <FaChalkboardTeacher className="text-indigo-500" /> Your Classrooms
+                </h2>
 
-                    <div className="bg-white p-6 rounded-2xl shadow-2xl flex items-center justify-between border-l-4 border-green-500 hover:scale-105 transition transform">
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-700">Quizzes</h3>
-                            <p className="text-2xl font-bold text-green-600">2 Active</p>
-                        </div>
-                        <FaClipboardList className="text-green-500 text-5xl" />
-                    </div>
+                <div className="flex flex-col gap-6">
+                    {classrooms.length > 0 ? (
+                        classrooms.map((classroom) => (
+                            <div key={classroom._id} className="bg-white p-6 rounded-2xl shadow-2xl border-l-4 border-blue-500 transition-transform hover:scale-105">
+                                <h3 className="text-xl font-bold text-blue-600 flex items-center gap-2">
+                                    <FaChalkboardTeacher /> {classroom.name}
+                                </h3>
+                                <p className="text-gray-600">{classroom.subject}</p>
+                                <p className="text-sm text-gray-400 mt-2">Credits: {classroom.credits}</p>
 
-                    <div className="bg-white p-6 rounded-2xl shadow-2xl flex items-center justify-between border-l-4 border-purple-500 hover:scale-105 transition transform">
-                        <div>
-                            <h3 className="text-lg font-semibold text-gray-700">Students Enrolled</h3>
-                            <p className="text-2xl font-bold text-purple-600">120+</p>
-                        </div>
-                        <FaUsers className="text-purple-500 text-5xl" />
-                    </div>
-                </div>
+                                {/* Additional Classroom Info */}
+                                <p className="text-gray-700 mt-2 flex items-center gap-2">
+                                    <FaUserGraduate className="text-green-500" />
+                                    <strong>Students Enrolled:</strong> {classroom.totalStudents}
+                                </p>
+                                <p className="text-gray-700 flex items-center gap-2">
+                                    <FaTasks className="text-purple-500" />
+                                    <strong>Total Assignments:</strong> {classroom.totalAssignments}
+                                </p>
 
-                {/* Dashboard Actions */}
-                <div className="grid grid-cols-2 gap-6 mb-10">
-                    <Link to="/create-class" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold p-6 rounded-2xl shadow-2xl flex items-center justify-center transition transform hover:scale-105">
-                        <IoMdAddCircle className="text-2xl mr-3" /> Create Class
-                    </Link>
-                    <Link to="/quiz-management" className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-500 text-white font-semibold p-6 rounded-2xl shadow-2xl flex items-center justify-center transition transform hover:scale-105">
-                        📜 Manage Quizzes
-                    </Link>
-                    <Link to="/assignments" className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-500 text-white font-semibold p-6 rounded-2xl shadow-2xl flex items-center justify-center transition transform hover:scale-105">
-                        ✅ Assignments
-                    </Link>
-                    <Link to="/students" className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-500 text-white font-semibold p-6 rounded-2xl shadow-2xl flex items-center justify-center transition transform hover:scale-105">
-                        👨‍🎓 View Students
-                    </Link>
-                </div>
-
-                {/* Recent Activities Section */}
-                <div className="bg-white p-6 rounded-2xl shadow-2xl">
-                    <h3 className="text-2xl font-semibold text-gray-700 mb-5">Recent Activities</h3>
-                    <ul className="space-y-4">
-                        <li className="flex justify-between text-gray-600 hover:text-blue-500 transition duration-300">
-                            <span>✔ Created "Data Structures" Class</span>
-                            <span className="text-sm text-gray-400">2 days ago</span>
-                        </li>
-                        <li className="flex justify-between text-gray-600 hover:text-blue-500 transition duration-300">
-                            <span>📜 Added Quiz on "Algorithms"</span>
-                            <span className="text-sm text-gray-400">3 days ago</span>
-                        </li>
-                        <li className="flex justify-between text-gray-600 hover:text-blue-500 transition duration-300">
-                            <span>✅ Reviewed 5 Assignments</span>
-                            <span className="text-sm text-gray-400">5 days ago</span>
-                        </li>
-                    </ul>
+                                {/* Event Notification Input */}
+                                <div className="mt-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Write event notification..."
+                                        className="p-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        value={notifications[classroom._id] || ""}
+                                        onChange={(e) => handleNotificationChange(classroom._id, e)}
+                                    />
+                                    <button
+                                        onClick={() => handleNotificationSubmit(classroom._id)}
+                                        className="mt-3 w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
+                                    >
+                                        <FaPaperPlane /> Send Notification
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-500 text-center w-full">No classrooms found.</p>
+                    )}
                 </div>
             </div>
         </div>

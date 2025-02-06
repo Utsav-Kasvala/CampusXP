@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { PieChart } from '@mui/x-charts/PieChart';
-import { authContext } from '../context/AuthContext';
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { Chart } from "react-google-charts";
+import { authContext } from "../context/AuthContext";
 
 const ClassroomWiseAttendance = () => {
   const { studentId } = useContext(authContext);
@@ -25,70 +25,79 @@ const ClassroomWiseAttendance = () => {
         console.log('Attendance Data:', response.data);
 
         const data = response.data.classroomwiseattendance || [];
-        setNoClasses(data.length === 0);
+
+        if (data.length === 0) setNoClasses(true);
         setAttendanceData(data);
       } catch (error) {
-        console.error('Error fetching attendance data:', error);
+        console.error("Error fetching attendance data:", error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAttendance();
+    if (studentId) fetchAttendance();
   }, [studentId]);
 
   if (loading) {
-    return <div className="text-center mt-10">Loading...</div>;
-  }
-
-  if (noClasses) {
-    return <p className="text-center text-red-500">Classes have not started yet.</p>;
+    return <div className="text-center mt-4 text-sm">Loading...</div>;
   }
 
   const groupedAttendance = attendanceData.reduce((acc, record) => {
     const { classname, present } = record;
+    if (!classname) return acc;
+
     if (!acc[classname]) {
       acc[classname] = { total: 0, present: 0, absent: 0 };
     }
 
     acc[classname].total += 1;
-    acc[classname][present ? 'present' : 'absent'] += 1;
+    acc[classname][present ? "present" : "absent"] += 1;
+
     return acc;
   }, {});
 
-  const generatePieChartData = (classData) => {
-    const pieData = [
-      { id: "Present", value: classData.present, color: "#4caf50" },
-      { id: "Absent", value: classData.absent, color: "#f44336" }
-    ];
-  
-    console.log("📊 Pie Chart Data:", pieData);
-    return pieData;
-  };
+  const classes = Object.keys(groupedAttendance);
 
   return (
-    <div className="min-h-screen py-8 flex justify-center items-center">
-      <div className="bg-white shadow rounded-lg p-6 w-full max-w-4xl">
-        <h1 className="text-2xl font-bold text-center mb-6">Class-wise Attendance</h1>
-        <div className="overflow-x-auto flex gap-6 pb-6 scrollbar-hide">
-          {Object.keys(groupedAttendance).map((classname, index) => {
+    <div className="w-full flex justify-center">
+      {noClasses ? (
+        <p className="text-center text-red-500 text-sm">No attendance data available.</p>
+      ) : (
+        <div
+          className={`flex ${
+            classes.length === 1 ? "justify-center" : "justify-center gap-4 flex-wrap"
+          }`}
+        >
+          {classes.map((classname, index) => {
             const classData = groupedAttendance[classname];
+            const pieChartData = [
+              ["Status", "Count"],
+              ["Present", classData.present || 0],
+              ["Absent", classData.absent || 0],
+            ];
+
             return (
-              <div key={index} className="p-6 bg-gray-50 shadow rounded-lg flex flex-col items-center w-80">
-                <h2 className="text-xl font-semibold mb-6">{classname}</h2>
-                <PieChart
-                  series={[{ data: generatePieChartData(classData), innerRadius: 50, outerRadius: 120 }]}
-                  width={350}
-                  height={350}
+              <div
+                key={index}
+                className="p-4 bg-gray-50 shadow-md rounded-lg flex flex-col items-center max-w-sm"
+              >
+                <h2 className="text-lg font-semibold mb-2">{classname}</h2>
+                <Chart
+                  chartType="PieChart"
+                  data={pieChartData}
+                  options={{
+                    legend: "none",
+                    pieSliceText: "label",
+                    pieStartAngle: 100,
+                  }}
+                  width="250px"
+                  height="250px"
                 />
-                <p className="mt-4 text-center">
-                  Total: {classData.total} | Present: {classData.present} | Absent: {classData.absent}
-                </p>
               </div>
             );
           })}
         </div>
-      </div>
+      )}
     </div>
   );
 };

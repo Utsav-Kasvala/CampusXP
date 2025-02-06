@@ -37,7 +37,7 @@ export const createQuiz = async (req, res) => {
 
         return res.status(201).json({ message: "Quiz created successfully", quiz: newQuiz });
     } catch (error) {
-        console.error("Error creating quiz:", error);
+     //   console.error("Error creating quiz:", error);
         return res.status(500).json({ error: "Failed to create quiz" });
     }
 };
@@ -72,7 +72,7 @@ export const getQuizResultByJoincode = async (req, res) => {
         const quizzes = await Quiz.find({ joinCode});
         res.status(200).json({ quizzes });
     } catch (error) {
-        console.error("Error fetching A/NA Quizzes by students:", error);
+      //  console.error("Error fetching A/NA Quizzes by students:", error);
         res.status(500).json({ error: "Failed to fetch A/NA  Quizzes" });
     }
 };
@@ -148,7 +148,7 @@ export const submitQuizAttempt = async (req, res) => {
         await newResponse.save();
         res.status(201).json({ message: "Quiz submitted successfully", score });
     } catch (error) {
-        console.error("Error submitting quiz:", error);
+      //  console.error("Error submitting quiz:", error);
         res.status(500).json({ error: "Failed to submit quiz" });
     }
 };

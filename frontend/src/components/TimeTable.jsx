@@ -6,7 +6,6 @@ import { FaTrash } from 'react-icons/fa';
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const timeSlots = ["8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
 const API_URL = `${BASE_URL}/timeTable`;
-// const user=localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 
 function Timetable() {
   const [entries, setEntries] = useState({});
@@ -21,17 +20,15 @@ function Timetable() {
         const response = await fetch(`${API_URL}/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
-        // Check if the response is okay
+
         if (!response.ok) {
           throw new Error('Failed to fetch entries');
         }
 
         const data = await response.json();
 
-        // Format entries to be easy to access
         const formattedEntries = data.reduce((acc, item) => {
-          acc[`${item.day}-${item.time}`] = { entry: item.entry, id: item._id }; // Assuming _id is the identifier
+          acc[`${item.day}-${item.time}`] = { entry: item.entry, id: item._id };
           return acc;
         }, {});
         setEntries(formattedEntries);
@@ -40,9 +37,12 @@ function Timetable() {
       }
     };
     fetchEntries();
-  }, [userId]); // Re-fetch when user.studentId changes
+  }, [userId]);
 
-  const handleCellClick = (day, time) => setSelectedSlot({ day, time });
+  const handleCellClick = (day, time) => {
+    setSelectedSlot({ day, time });
+    setNewEntry(entries[`${day}-${time}`]?.entry || '');
+  };
 
   const handleEntrySubmit = async () => {
     if (selectedSlot && newEntry) {
@@ -88,73 +88,89 @@ function Timetable() {
   };
 
   return (
-    <div className="p-8 m-20">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-700">Weekly Timetable</h1>
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-gray-300 shadow-lg rounded-lg">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2 bg-blue-200 text-gray-800 font-semibold"></th>
-              {timeSlots.map((time, i) => (
-                <th key={i} className="border border-gray-300 px-4 py-2 bg-blue-200 text-gray-800 font-semibold text-center">
-                  {time}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {days.map(day => (
-              <tr key={day} className="bg-white hover:bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2 font-semibold text-center bg-blue-50 text-gray-700">
-                  {day}
-                </td>
-                {timeSlots.map(time => (
-                  <td
-                    key={`${day}-${time}`}
-                    className="border border-gray-300 px-4 py-2 text-center cursor-pointer relative group"
-                    onClick={() => handleCellClick(day, time)}
-                  >
-                    {entries[`${day}-${time}`]?.entry || ""}
-                    {entries[`${day}-${time}`] && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent cell click
-                          handleDeleteEntry(day, time);
-                        }}
-                        className="absolute right-1 top-1 text-red-600 hover:text-red-800 transition-all opacity-0 group-hover:opacity-100"
-                      >
-                        <FaTrash />
-                      </button>
-                    )}
-                  </td>
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-purple-200 to-blue-400 flex flex-col items-center p-6 mt-16">
+      {/* Hover effect applied here */}
+      <div className="p-8 m-16 bg-gradient-to-r backdrop-blur-lg bg-opacity-50 rounded-xl shadow-lg w-full max-w-5xl hover:bg-purple-200 hover:shadow-2xl transition-all duration-300">
+        <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">Weekly Timetable</h1>
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-gray-300 shadow-lg rounded-lg">
+            <thead>
+              <tr>
+                <th className="border-4 border-gray-700 px-4 py-3 bg-yellow-200 text-gray-800 font-semibold text-lg"></th>
+                {timeSlots.map((time, i) => (
+                  <th key={i} className="border-4 border-gray-700 px-4 py-3 bg-yellow-200 text-gray-800 font-semibold text-center text-base">
+                    {time}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {days.map(day => (
+                <tr key={day} className="bg-white hover:bg-gray-100">
+                  <td className="border-4 border-gray-700 px-4 py-3 font-semibold text-center bg-yellow-200 text-gray-700 text-base">
+                    {day}
+                  </td>
+                  {timeSlots.map(time => {
+                    const isSelected = selectedSlot?.day === day && selectedSlot?.time === time;
 
-      {/* Entry Form */}
-      {selectedSlot && (
-        <div className="mt-6 p-4 bg-gray-50 border rounded-lg w-full max-w-md mx-auto shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-blue-700">
-            Add Entry for {selectedSlot.day} at {selectedSlot.time}
-          </h2>
-          <input
-            type="text"
-            value={newEntry}
-            onChange={(e) => setNewEntry(e.target.value)}
-            className="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Enter subject or activity"
-          />
-          <button
-            onClick={handleEntrySubmit}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition w-full"
-          >
-            Add Entry
-          </button>
+                    return (
+                      <td
+                        key={`${day}-${time}`}
+                        className={`border-4 border-gray-700 px-4 py-3 text-center cursor-pointer relative group transition-all ${isSelected ? "bg-blue-300" : "bg-red-100 hover:bg-gray-200"
+                          }`}
+                        onClick={() => handleCellClick(day, time)}
+                      >
+                        {entries[`${day}-${time}`]?.entry || ""}
+                        {entries[`${day}-${time}`] && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent cell click
+                              handleDeleteEntry(day, time);
+                            }}
+                            className="absolute right-2 top-2 text-red-600 hover:text-red-800 transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      )}
+
+        {/* Entry Form */}
+        {selectedSlot && (
+          <div className="mt-6 p-4 bg-gray-50 border rounded-lg w-full max-w-md mx-auto shadow-md relative">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedSlot(null)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition text-2xl"
+            >
+              &times;
+            </button>
+
+            <h2 className="text-xl font-semibold mb-4 text-blue-700">
+              Add Entry for {selectedSlot.day} at {selectedSlot.time}
+            </h2>
+            <input
+              type="text"
+              value={newEntry}
+              onChange={(e) => setNewEntry(e.target.value)}
+              className="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Enter subject or activity"
+            />
+            <button
+              onClick={handleEntrySubmit}
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition w-full"
+            >
+              Add Entry
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

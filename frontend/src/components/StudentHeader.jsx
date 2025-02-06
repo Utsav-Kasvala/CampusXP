@@ -36,6 +36,9 @@ const StudentHeader = () => {
           <Link to="/allclassrooms" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FiActivity className="mr-2" /> Classrooms
           </Link>
+          <Link to="/timeTable" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
+            <FiActivity className="mr-2" /> TimeTable
+          </Link>
           <Link to="/quizzes" className="flex items-center hover:text-yellow-300 transition-colors duration-300">
             <FaPuzzlePiece className="mr-2" /> Quizzes
           </Link>

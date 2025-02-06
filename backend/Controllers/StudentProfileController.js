@@ -10,7 +10,7 @@ export const getStudentProfile = async (req, res) => {
     }
     res.json(profile);
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -43,7 +43,7 @@ export const updateStudentProfile = async (req, res) => {
 
     res.json(updatedProfile);
   } catch (error) {
-    console.error(error);
+  //  console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
