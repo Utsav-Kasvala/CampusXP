@@ -24,7 +24,7 @@ export const getProfProfile = async (req, res) => {
         classrooms: profile.classrooms, // Include the populated classrooms
       });
     } catch (error) {
-      console.error("Error fetching professor profile:", error);
+      //console.error("Error fetching professor profile:", error);
       res.status(500).json({ message: "Server error" });
     }
   };
@@ -98,7 +98,7 @@ export const uploadProfProfilePic = async (req, res) => {
 
       res.status(200).json({ message: 'Profile picture updated successfully', photo: professor.photo });
   } catch (error) {
-      console.error(error);
+      //console.error(error);
       res.status(500).json({ message: 'Server error' });
   }
 };

@@ -11,10 +11,19 @@ const ClassroomWiseAttendance = () => {
 
   useEffect(() => {
     const fetchAttendance = async () => {
+      if (!studentId) {
+        console.warn('Student ID is undefined. Cannot fetch attendance.');
+        setLoading(false);
+        return;
+      }
+
       try {
+        console.log(`Fetching attendance for Student ID: ${studentId}`);
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/students/${studentId}/classroomwiseattendance`
         );
+        console.log('Attendance Data:', response.data);
+
         const data = response.data.classroomwiseattendance || [];
 
         if (data.length === 0) setNoClasses(true);

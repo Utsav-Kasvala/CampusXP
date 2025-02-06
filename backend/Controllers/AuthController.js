@@ -51,7 +51,7 @@ export const register = async (req, res) => {
 
         res.status(201).json({ success: true, message: 'User successfully created' });
     } catch (err) {
-        console.error(err);
+        //console.error(err);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
@@ -67,10 +67,10 @@ export const login = async (req, res) => {
 
         if (student) {
             user = student;
-            console.log('Logged in as student:', user); // Debug: Log student details
+            //console.log('Logged in as student:', user); // Debug: Log student details
         } else if (professor) {
             user = professor;
-            console.log('Logged in as professor:', user); // Debug: Log professor details
+            //console.log('Logged in as professor:', user); // Debug: Log professor details
         }
 
         if (!user) {
@@ -91,10 +91,10 @@ export const login = async (req, res) => {
         const { password: userPassword, role, ...rest } = user._doc;
 
         // Debug: Log user data being returned
-        console.log('Returning user data:', {
-            ...rest,
-            studentId: user.studentId || null, // Ensure studentId is included if applicable
-        });
+       // console.log('Returning user data:', {
+        //     ...rest,
+        //     studentId: user.studentId || null, // Ensure studentId is included if applicable
+        // });
 
         // Respond with user data and token
         res.status(200).json({
@@ -108,7 +108,7 @@ export const login = async (req, res) => {
             role,
         });
     } catch (err) {
-        console.error(err);
+      //  console.error(err);
         res.status(500).json({ success: false, message: 'Failed to login' });
     }
 };

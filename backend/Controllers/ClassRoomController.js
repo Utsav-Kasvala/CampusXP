@@ -44,7 +44,7 @@ export const getAssignmentsByClassroomJoinCode = async (req, res) => {
         // Return assignments with submission counts
         res.status(200).json({ assignments: formattedAssignments });
     } catch (error) {
-        console.error("Error fetching assignments:", error);
+       // console.error("Error fetching assignments:", error);
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
@@ -174,7 +174,7 @@ export const createAssignment = async (req, res) => {
 
         res.status(201).json({ message: 'Assignment created and linked to students.', assignment });
     } catch (error) {
-        console.error('Error creating assignment:', error);
+        //console.error('Error creating assignment:', error);
         res.status(500).json({ message: 'Failed to create assignment.' });
     }
 };
@@ -195,7 +195,7 @@ export const getClassroomByJoinCode = async (req, res) => {
         // Return classroom details
         res.status(200).json({ classroom });
     } catch (error) {
-        console.error("Error fetching classroom by join code:", error);
+        //console.error("Error fetching classroom by join code:", error);
         res.status(500).json({ message: 'Failed to retrieve classroom details.' });
     }
 };
@@ -268,7 +268,7 @@ export const getStudentsByJoinCode = async (req, res) => {
         // Send the list of students as response
         res.status(200).json({ students: classroom.students });
     } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).json({ message: 'Failed to fetch students' });
     }
 };
