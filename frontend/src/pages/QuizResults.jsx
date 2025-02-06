@@ -31,7 +31,6 @@ const QuizResPage = () => {
     // <StarField/> 
     //   <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
     <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-    <StarField/>
     <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-90">
 
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">

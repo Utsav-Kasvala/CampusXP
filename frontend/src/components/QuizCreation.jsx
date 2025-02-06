@@ -52,7 +52,6 @@ const QuizCreationPage = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center p-6 mt-10 bg-gradient-to-r from-indigo-900 to-blue-700">
-      <StarField />
       <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-10 border border-gray-300">
         <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6">Create Quiz</h1>
         <div className="space-y-4">
