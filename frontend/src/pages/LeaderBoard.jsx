@@ -33,7 +33,7 @@ const Leaderboard = () => {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-gradient-to-b from-blue-100 to-white rounded-lg shadow-md mt-20">
+        <div className="max-w-3xl mx-auto p-6 bg-gradient-to-b from-blue-100 to-white rounded-lg shadow-md mt-20 mb-10">
             <h1 className="text-4xl font-bold mb-6 text-center text-blue-700">Leaderboard</h1>
             {loading ? (
                 <p className="text-center text-gray-500">Loading...</p>

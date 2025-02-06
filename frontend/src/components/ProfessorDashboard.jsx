@@ -43,12 +43,10 @@ const ProfessorDashboard = () => {
     useEffect(() => {
         const fetchClassrooms = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/classrooms/dashboard`, {
-                    method: 'POST',
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/classrooms/dashboard/${user.professorId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ professorId: user?.professorId }),
                 });
 
                 const data = await response.json();
@@ -75,9 +73,40 @@ const ProfessorDashboard = () => {
         }));
     };
 
-    const handleNotificationSubmit = (classroomId) => {
-        alert(`Notification sent for Classroom ID: ${classroomId} - Message: ${notifications[classroomId] || ""}`);
+    const handleNotificationSubmit = async (classroomId) => {
+        const message = notifications[classroomId] || "";
+    
+        if (!message.trim()) {
+            alert("Notification message cannot be empty!");
+            return;
+        }
+    
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/classrooms/postnotification/${classroomId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to send notification");
+            }
+    
+            alert("Notification sent successfully!");
+    
+            // Clear the input field after sending the notification
+            setNotifications((prev) => ({
+                ...prev,
+                [classroomId]: "",
+            }));
+        } catch (error) {
+            console.error("Error sending notification:", error);
+            alert("Failed to send notification. Please try again.");
+        }
     };
+    
 
     return (
         <div className="relative min-h-screen bg-gradient-to-r from-indigo-900 to-blue-700 flex flex-col items-center p-6 mt-16">
@@ -99,9 +128,7 @@ const ProfessorDashboard = () => {
                 {/* Professor Info */}
                 <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-xl mb-10 text-center">
                     <p className="text-2xl font-semibold">Welcome, {user?.name}!</p>
-                    <p className="text-lg flex items-center justify-center gap-2">
-                        <FaChalkboardTeacher className="text-yellow-300" /> <strong>Professor ID:</strong> {user?.professorId}
-                    </p>
+
                 </div>
 
                 {/* Classrooms Section */}

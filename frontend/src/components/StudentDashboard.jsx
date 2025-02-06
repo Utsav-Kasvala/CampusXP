@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { extend } from "@react-three/fiber";
 import { BASE_URL, token } from '../config.js';
 import { FaStar } from 'react-icons/fa';
+import Notifications from './Notifications.jsx';
 
 // Extend THREE if needed
 extend(THREE);
@@ -74,14 +75,12 @@ const StudentDashboard = () => {
           <ClassroomWiseAttendance />
         </div>
 
-        {/* Additional Features Section */}
+        {/* Notifications Section */}
         <section className="w-full">
-          <h2 className="text-3xl font-semibold text-center mb-6 text-yellow-200">Upcoming Events & Announcements</h2>
+          <h2 className="text-3xl font-semibold text-center mb-6 text-yellow-200">Classroom Notifications</h2>
           <div className="bg-gray-100 p-6 rounded-xl shadow-md text-center">
-            <p className="text-gray-700">
-              Stay tuned for updates on your courses, upcoming assignments, and events!
-              Make sure to check your emails and class notifications regularly.
-            </p>
+            {/* Notification Component */}
+            <Notifications />
           </div>
         </section>
       </div>

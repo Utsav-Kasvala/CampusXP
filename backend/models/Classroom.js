@@ -13,7 +13,14 @@ const classroomSchema = new mongoose.Schema({
             name: { type: String, required: true } // Student name
         }
     ],
-    assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }] // Array of Assignment references
+    assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }], // Array of Assignment references
+    // Notifications stored within the classroom itself
+    notifications: [
+        {
+            message: { type: String, required: true }, 
+            timestamp: { type: Date, default: Date.now } // Auto-set timestamp
+        }
+    ]
 });
 
 const Classroom = mongoose.model('Classroom', classroomSchema);
