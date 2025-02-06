@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ClassroomWiseAttendance from './Classroomwiseatt.jsx'; 
 import TimeTable from './TimeTable.jsx'; 
-import { useContext } from 'react';
 import { authContext } from '../context/AuthContext';
 
 const StudentDashboard = () => {
-  const { user } = useContext(authContext);
+  const { user, studentId } = useContext(authContext);
+
+  console.log('StudentDashboard - User Data:', user);
+  console.log('StudentDashboard - Student ID:', studentId);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -24,9 +26,11 @@ const StudentDashboard = () => {
           <ClassroomWiseAttendance />
         </section>
 
-        {/* Additional Features Section (Optional) */}
+        {/* Additional Features Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold text-center mb-6 text-blue-600">Upcoming Events & Announcements</h2>
+          <h2 className="text-2xl font-semibold text-center mb-6 text-blue-600">
+            Upcoming Events & Announcements
+          </h2>
           <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
             <p className="text-gray-700 text-center">
               Stay tuned for updates on your courses, upcoming assignments, and events! 
