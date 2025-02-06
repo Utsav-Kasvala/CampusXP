@@ -14,13 +14,23 @@ const JoinClassroom = () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/classrooms/join`, {
                 code,
-                studentId: studentId, 
+                studentId: studentId,
                 studentName: user?.name,
             });
+
+            // If joining is successful, show success message
             setMessage('Joined classroom successfully!');
-            navigate(0);
+            navigate(0);  // Refresh the page
+
         } catch (error) {
-            setMessage(error.response?.status === 404 ? 'Invalid code. Please check and try again.' : 'Error joining classroom. Please try again later.');
+            // Handle error scenarios
+            if (error.response?.status === 400) {
+                setMessage('You have already joined this classroom.');
+            } else if (error.response?.status === 404) {
+                setMessage('Invalid code. Please check and try again.');
+            } else {
+                setMessage('Error joining classroom. Please try again later.');
+            }
         }
     };
 

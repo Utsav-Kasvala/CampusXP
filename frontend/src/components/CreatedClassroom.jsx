@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { authContext } from "../context/AuthContext";
 import axios from "axios";
-import { FaClipboardList, FaEye, FaTasks, FaFileAlt, FaQuestionCircle } from "react-icons/fa"; // Import icons
-import * as THREE from "three"; // Import Three.js
+import { FaClipboardList, FaEye, FaTasks, FaFileAlt, FaQuestionCircle } from "react-icons/fa";
+import StarField from "../components/StarField"; // Import the StarField component
 
 const CreatedClasses = () => {
   const { professorId } = useParams();
@@ -11,62 +11,6 @@ const CreatedClasses = () => {
   const [classrooms, setClassrooms] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const canvasRef = useRef(null); // Ref for the canvas element
-
-  useEffect(() => {
-    // Initialize StarField (Three.js)
-    const canvas = canvasRef.current;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    // Starfield creation
-    const numStars = 2000;
-    const positions = new Float32Array(numStars * 3);
-    const speeds = new Float32Array(numStars);
-
-    for (let i = 0; i < numStars; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20; // X position
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20; // Y position
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // Z position (depth)
-      speeds[i] = Math.random() * 0.002 + 0.0005; // Different twinkle speeds
-    }
-
-    // Create points geometry for the stars
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    // Material for the stars
-    const material = new THREE.PointsMaterial({ size: 0.05, color: 0xffffff, sizeAttenuation: true });
-
-    // Create the point system (stars)
-    const stars = new THREE.Points(geometry, material);
-    scene.add(stars);
-
-    camera.position.z = 5;
-
-    // Animation loop for the starfield effect
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      for (let i = 0; i < numStars; i++) {
-        positions[i * 3 + 2] += speeds[i]; // Move stars forward
-        if (positions[i * 3 + 2] > 10) positions[i * 3 + 2] = -10; // Reset star depth
-      }
-
-      geometry.attributes.position.needsUpdate = true; // Update star positions
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
-    // Cleanup on component unmount
-    return () => {
-      document.body.removeChild(renderer.domElement);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchClassrooms = async () => {
@@ -106,9 +50,12 @@ const CreatedClasses = () => {
   };
 
   return (
+    // <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
+    //   <StarField /> {/* Use the external StarField component */}
+    //   <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-80">
     <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0" />
-      <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-80">
+    <StarField />
+    <div className="relative z-10 w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-95">
         <h1 className="text-4xl font-extrabold text-blue-700 mb-6 text-center">Created Classes</h1>
         <div className="text-lg font-medium mb-4 text-center">
           <p className="text-gray-700">Professor ID: {user.professorId || professorId}</p>
