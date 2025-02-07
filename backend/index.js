@@ -17,10 +17,10 @@ import resetPasswordRoute from './routes/ResetPasswordRoute.js'
 dotenv.config(); // Load environment variables
 
 const app = express();
-// Allow specific origins
+//Allow specific origins
 const corsOptions = {
     origin: ["https://campus-xp-ywga.vercel.app"], // Add allowed frontend URLs
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow cookies and auth headers
 };
