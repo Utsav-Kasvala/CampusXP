@@ -88,7 +88,7 @@ function Timetable() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-purple-200 to-blue-400 flex flex-col items-center p-6 mt-16">
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-purple-200 to-blue-600 flex flex-col items-center p-6 mt-16">
       {/* Hover effect applied here */}
       <div className="p-8 m-16 bg-gradient-to-r backdrop-blur-lg bg-opacity-50 rounded-xl shadow-lg w-full max-w-5xl hover:bg-purple-200 hover:shadow-2xl transition-all duration-300">
         <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">Weekly Timetable</h1>

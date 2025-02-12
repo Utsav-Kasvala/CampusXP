@@ -53,10 +53,10 @@ const AttendancePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex">
-            <div className="w-1/4 bg-white shadow-lg p-6 h-screen overflow-y-auto mt-20 rounded-lg border-r border-gray-200">
-                <h2 className="text-xl font-bold text-blue-700 mb-4">Class Attendance</h2>
-                <ul className="divide-y divide-gray-200">
+        <div className="min-h-screen bg-purple-100 flex">
+            <div className="w-1/4 bg-pink-100 shadow-lg p-6 h-screen overflow-y-auto mt-20 rounded-lg border-r-2 border-black">
+                <h2 className="text-xl font-extrabold text-cyan-700 mb-4">Class Attendance</h2>
+                <ul className="divide-y divide-gray-300">
                     {studentsAttendance.map((student) => (
                         <li key={student.name} className="p-4 hover:bg-gray-50 rounded-lg">
                             <p className="text-gray-900 font-semibold">{student.name}</p>
@@ -69,11 +69,11 @@ const AttendancePage = () => {
             </div>
 
             <div className="flex-1 flex flex-col items-center py-8 mt-20">
-                <h1 className="text-3xl font-extrabold text-blue-600 mb-6">Attendance Records</h1>
+                <h1 className="text-3xl font-extrabold text-cyan-600 mb-6">Attendance Records</h1>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <div className="mb-6">
                     <label className="block text-gray-800 font-bold mb-2" htmlFor="filter-date">Filter by Date:</label>
-                    <input type="date" id="filter-date" value={filterDate} onChange={handleDateChange} className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-200" />
+                    <input type="date" id="filter-date" value={filterDate} onChange={handleDateChange} className="p-3 border border-black rounded-lg shadow-sm focus:ring focus:ring-blue-200" />
                 </div>
                 {filterDate === '' ? (
                     <p className="text-gray-600">Select a date to filter attendance records.</p>

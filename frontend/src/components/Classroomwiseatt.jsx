@@ -79,7 +79,7 @@ const ClassroomWiseAttendance = () => {
             return (
               <div
                 key={index}
-                className="p-4 bg-gray-50 shadow-md rounded-lg flex flex-col items-center max-w-sm"
+                className="p-4 bg-blue-100 shadow-md rounded-lg flex flex-col items-center max-w-sm"
               >
                 <h2 className="text-lg font-semibold mb-2">{classname}</h2>
                 <Chart

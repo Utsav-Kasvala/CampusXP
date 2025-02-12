@@ -12,7 +12,7 @@ const Joinandjoined = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-purple-200 to-blue-400 flex flex-col lg:flex-row items-start p-6 mt-16 gap-6">
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-purple-200 to-blue-600 flex flex-col lg:flex-row items-start p-6 mt-16 gap-6">
       
       {/* Sticky Join Classroom Box (Left Side) */}
       <div className="lg:w-1/4 w-full">

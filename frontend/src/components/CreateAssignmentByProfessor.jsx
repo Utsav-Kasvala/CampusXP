@@ -65,9 +65,9 @@ const CreateAssignment = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-      <div className="relative z-10 w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-95">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">📚 Create New Assignment</h1>
+    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-purple-900 to-blue-100">
+      <div className="relative z-10 w-full max-w-3xl bg-blue-100 shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-95">
+        <h1 className="text-3xl font-bold mb-6 text-center text-cyan-800">📚 Create New Assignment</h1>
 
         {error && (
           <p className="flex items-center gap-2 text-red-600 bg-red-100 px-4 py-2 rounded mb-4">
@@ -84,10 +84,10 @@ const CreateAssignment = () => {
           <div>
             <div className="bg-gray-100 p-4 rounded-lg shadow mb-6">
               <h2 className="flex items-center gap-2 text-lg font-medium text-gray-700">
-                <FaBook className="text-blue-600" /> Classroom: {classroom.subjectName}
+                <FaBook className="text-cyan-600" /> Classroom: {classroom.subjectName}
               </h2>
               <p className="flex items-center gap-2 text-gray-600">
-                <FaUserTie className="text-blue-600" /> Professor: {user.name || "Not Available"}
+                <FaUserTie className="text-cyan-600" /> Professor: {user.name || "Not Available"}
               </p>
               <p className="text-gray-600">
                 <strong>Credits:</strong> {classroom.credits}
@@ -120,7 +120,7 @@ const CreateAssignment = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                <label className=" text-sm font-medium text-gray-700 flex items-center gap-1">
                   <FaCalendarAlt /> Due Date
                 </label>
                 <input
@@ -143,20 +143,20 @@ const CreateAssignment = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-1">
+                <label className=" text-sm font-medium text-gray-700 flex items-center gap-1">
                   <AiOutlineFilePdf /> Upload Assignment PDF
                 </label>
                 <input
                   type="file"
                   accept=".pdf"
                   onChange={handleFileChange}
-                  className="mt-1 p-2 border rounded w-full file:bg-blue-500 file:text-white file:px-3 file:py-1 file:rounded hover:file:bg-blue-700 transition"
+                  className="mt-1 p-2 border rounded w-full file:bg-cyan-500 file:text-white file:px-3 file:py-1 file:rounded hover:file:bg-cyan-700 transition"
                 />
               </div>
 
               <button
                 onClick={handleAssignmentCreate}
-                className="mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg text-lg font-semibold shadow hover:bg-blue-700 transition transform hover:scale-105"
+                className="mt-6 flex items-center justify-center gap-2 bg-cyan-600 text-white px-6 py-2 rounded-lg text-lg font-semibold shadow hover:bg-cyan-700 transition transform hover:scale-105"
               >
                 <FaFileUpload /> Create Assignment
               </button>

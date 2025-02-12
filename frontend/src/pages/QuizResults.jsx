@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { authContext } from "../context/AuthContext";
 import axios from "axios";
 import StarField from "../components/StarField";
+
 const QuizResPage = () => {
   const { professorId } = useParams();
   const { user } = useContext(authContext);
@@ -27,18 +28,15 @@ const QuizResPage = () => {
   }, [user.professorId]);
 
   return (
-    // <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6 mt-20">
-    // <StarField/> 
-    //   <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
-    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-    <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-90">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-200 via-indigo-200 to-blue-400 p-8">
+      <div className="max-w-6xl w-full p-8 mt-10 bg-gradient-to-b from-purple-900 to-blue-900 shadow-2xl rounded-3xl border border-white/20 text-white">
+        <h2 className="text-4xl font-extrabold mb-6 text-center text-white drop-shadow-lg">
+          📚 Quiz Courses
+        </h2>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Quizzes Courses
-        </h1>
-        <div className="text-lg font-medium mb-4">
-          <p>Professor ID: {user.professorId || professorId}</p>
-          <p>Professor Name: {user.name || "Not Available"}</p>
+        <div className="text-lg font-medium mb-4 text-center">
+          {/* <p>👨‍🏫 <span className="font-semibold text-white">Professor ID:</span> {user.professorId || professorId}</p> */}
+          <p>👨‍🏫 <span className="font-semibold text-white">Professor Name:</span> {user.name || "Not Available"}</p>
         </div>
 
         {error && (
@@ -48,35 +46,26 @@ const QuizResPage = () => {
         )}
 
         {classrooms.length > 0 ? (
-          <ul className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {classrooms.map((classroom) => (
-              <li
+              <div
                 key={classroom._id}
-                className="p-6 border border-gray-200 rounded-lg shadow-md bg-gray-50"
+                className="p-6 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 border border-white/30"
               >
-                <div className="mb-4">
-                  <Link
-                    to={`/quizResutShow/${classroom.subjectName}/${classroom.joinCode}/`}
-                    className="block text-blue-600 hover:text-blue-800 hover:underline"
-                  >
-                    <h3 className="text-xl font-semibold mb-2">
-                      {classroom.subjectName}
-                    </h3>
-                  </Link>
-                  <p className="mt-2 text-gray-700">
-                    <strong>Credits:</strong> {classroom.credits}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong>Join Code:</strong> {classroom.joinCode}
-                  </p>
-                </div>
-              </li>
+                <Link
+                  to={`/quizResutShow/${classroom.subjectName}/${classroom.joinCode}/`}
+                  className="block text-white hover:text-yellow-300 transition-all duration-300"
+                >
+                  <h3 className="text-2xl font-semibold mb-2">{classroom.subjectName}</h3>
+                </Link>
+                <p className="text-md text-gray-300 mb-1">
+                  <span className="font-semibold text-white">🎯 Credits:</span> {classroom.credits}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
         ) : (
-          <p className="text-gray-500 text-center mt-6">
-            No classes created yet.
-          </p>
+          <p className="text-center text-lg text-gray-200">No classes created yet.</p>
         )}
       </div>
     </div>

@@ -26,42 +26,45 @@ const ShowQuizzes = () => {
   }, [studentId]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-5xl w-full p-6 bg-white rounded shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-700">
-          Quiz Courses
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r  from-purple-200 via-indigo-200 to-blue-400 p-8">
+      <div className="max-w-6xl w-full p-8 mt-10 bg-gradient-to-b from-purple-900 to-blue-900 shadow-2xl rounded-3xl border border-white/20 text-white">
+        {/* Title */}
+        <h2 className="text-4xl font-extrabold mb-6 text-center text-white drop-shadow-lg">
+          📚 Quiz Courses
         </h2>
-        <p className="text-lg mb-4 text-center text-gray-700">
-          <strong>Student Name:</strong> {studentName}
+
+        {/* Student Name */}
+        <p className="text-lg mb-6 text-center font-semibold text-gray-200">
+          <span className="text-white">👨‍🎓 Student Name:</span> {studentName}
         </p>
+
+        {/* Loading Indicator */}
         {loading ? (
-          <p className="text-center">Loading classrooms...</p>
+          <p className="text-center text-lg animate-pulse text-gray-200">Loading classrooms...</p>
         ) : classrooms.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {classrooms.map((classroom) => (
               <div
                 key={classroom._id}
-                className="p-4 bg-gray-50 rounded shadow hover:shadow-lg transition-shadow duration-300 border border-gray-200"
+                className="p-6 bg-white/20 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 border border-white/30"
               >
                 <Link
                   to={`/quizzes/${classroom.joinCode}`}
-                  className="block text-blue-600 hover:text-blue-800 hover:underline"
+                  className="block text-white hover:text-yellow-300 transition-all duration-300"
                 >
-                  <h3 className="text-xl font-semibold mb-2">
-                    {classroom.subjectName}
-                  </h3>
+                  <h3 className="text-2xl font-semibold mb-2">{classroom.subjectName}</h3>
                 </Link>
-                <p className="text-md text-gray-700 mb-1">
-                  <strong>Credits:</strong> {classroom.credits}
+                <p className="text-md text-gray-300 mb-1">
+                  <span className="font-semibold text-white">🎯 Credits:</span> {classroom.credits}
                 </p>
-                <p className="text-md text-gray-700">
-                  <strong>Professor:</strong> {classroom.professorName}
+                <p className="text-md text-gray-300">
+                  <span className="font-semibold text-white">👨‍🏫 Professor:</span> {classroom.professorName}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center">No joined classrooms found.</p>
+          <p className="text-center text-lg text-gray-200">No joined classrooms found.</p>
         )}
       </div>
     </div>

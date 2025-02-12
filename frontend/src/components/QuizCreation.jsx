@@ -51,15 +51,15 @@ const QuizCreationPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center p-6 mt-10 bg-gradient-to-r from-indigo-900 to-blue-700">
-      <div className="relative z-10 w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-10 border border-gray-300">
-        <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6">Create Quiz</h1>
+    <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 bg-gradient-to-r from-purple-900 to-blue-100">
+      <div className="relative z-10 w-full max-w-4xl bg-blue-100 shadow-2xl rounded-2xl p-10 border border-gray-300 mt-5">
+        <h1 className="text-4xl font-extrabold text-center text-cyan-800 mb-6">Create Quiz</h1>
         <div className="space-y-4">
           <input type="text" placeholder="Quiz Title" value={quizTitle} onChange={(e) => setQuizTitle(e.target.value)}
             className="p-3 border border-gray-400 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-indigo-500" />
           <input type="number" placeholder="Quiz Duration (in minutes)" value={duration} onChange={(e) => setDuration(e.target.value)}
             className="p-3 border border-gray-400 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-indigo-500" />
-          <div className="p-5 border border-gray-300 rounded-lg bg-gray-50 shadow-inner">
+          <div className="p-5 border border-gray-300 rounded-lg bg-purple-100 shadow-inner">
             <input type="text" placeholder="Question" value={currentQuestion.text} onChange={(e) => setCurrentQuestion({ ...currentQuestion, text: e.target.value })}
               className="p-3 border border-gray-400 rounded-lg w-full shadow-sm focus:ring-2 focus:ring-indigo-500 mb-3" />
             {currentQuestion.options.map((option, index) => (
@@ -77,15 +77,15 @@ const QuizCreationPage = () => {
           </div>
         </div>
         <div className="flex justify-between mt-6 space-x-4">
-          <button onClick={handleAddQuestion} className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">Add Question</button>
+          <button onClick={handleAddQuestion} className="px-6 py-3 bg-violet-600 text-white rounded-lg shadow-md hover:bg-violet-700 transition">Add Question</button>
           <button onClick={handleSaveQuiz} className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition">Save Quiz</button>
         </div>
         {questions.length > 0 && (
-          <div className="mt-8 p-5 border border-gray-300 rounded-lg bg-gray-50 shadow-inner">
-            <h2 className="text-xl font-semibold mb-4">Added Questions</h2>
+          <div className="mt-8 p-5 bg-blue-100">
+            <h2 className="text-xl font-semibold text-cyan-700 mb-4">Added Questions</h2>
             <ul className="space-y-4">
               {questions.map((question, index) => (
-                <li key={index} className="p-4 border border-gray-300 rounded-lg bg-white shadow-md">
+                <li key={index} className="p-4 border border-gray-300 rounded-lg bg-purple-100 shadow-md">
                   <p className="font-medium mb-2">{`${index + 1}. ${question.text}`}</p>
                   <ul className="list-disc pl-6 mb-2">
                     {question.options.map((option, optIndex) => (

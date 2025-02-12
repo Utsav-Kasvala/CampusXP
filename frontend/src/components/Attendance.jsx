@@ -1,40 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-
-// StarField Component (Reused from CreateClass)
-const StarField = () => {
-    const numStars = 2000;
-    const positions = new Float32Array(numStars * 3);
-    const speeds = new Float32Array(numStars);
-
-    for (let i = 0; i < numStars; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 20;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-        speeds[i] = Math.random() * 0.002 + 0.0005;
-    }
-
-    const pointsRef = useRef();
-    useFrame(() => {
-        if (pointsRef.current) {
-            for (let i = 0; i < numStars; i++) {
-                positions[i * 3 + 2] += speeds[i];
-                if (positions[i * 3 + 2] > 10) positions[i * 3 + 2] = -10;
-            }
-            pointsRef.current.geometry.attributes.position.needsUpdate = true;
-        }
-    });
-
-    return (
-        <Points ref={pointsRef} positions={positions} frustumCulled={false}>
-            <PointMaterial size={0.05} color="#ffffff" sizeAttenuation />
-        </Points>
-    );
-};
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AttendancePage = () => {
     const { attendanceId } = useParams();
@@ -49,6 +17,7 @@ const AttendancePage = () => {
                 setAttendance(response.data);
             } catch (err) {
                 setError("Failed to fetch attendance record.");
+                toast.error("❌ Failed to fetch attendance!");
             }
         };
 
@@ -70,50 +39,51 @@ const AttendancePage = () => {
                 `${import.meta.env.VITE_API_BASE_URL}/attendance/update/${attendanceId}`,
                 { students: attendance.students }
             );
-            alert(response.data.message);
-            navigate('/professor/classrooms');
+            toast.success("Attendance updated successfully!");
+            setTimeout(() => navigate('/professor/classrooms'), 1500);
         } catch (err) {
-            setError("Failed to update attendance. Please try again.");
+            toast.error("❌ Failed to update attendance. Try again!");
         }
     };
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600 p-6">
-            {/* Attendance Content */}
-            <div className="relative z-10 w-full max-w-2xl bg-white bg-opacity-90 backdrop-blur-md shadow-2xl rounded-2xl p-8">
-                <h1 className="text-2xl font-bold mb-6 text-center">Take Attendance for Session</h1>
-                {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-900 to-blue-100 p-6">
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+            <div className="relative z-10 w-full max-w-3xl bg-white bg-opacity-20 backdrop-blur-xl shadow-xl rounded-3xl p-8 border border-white/20">
+                <h1 className="text-3xl font-extrabold text-white mb-6 text-center">
+                    📋 Attendance for Session
+                </h1>
+                {error && <p className="text-red-500 text-center">{error}</p>}
                 {attendance ? (
                     <>
-                        <h2 className="text-lg font-semibold mb-4 text-center">
-                            Date: {new Date(attendance.date).toLocaleDateString()}
+                        <h2 className="text-lg text-white font-semibold mb-6 text-center">
+                            📅 Date: {new Date(attendance.date).toLocaleDateString()}
                         </h2>
                         <ul className="space-y-4">
                             {attendance.students.map(student => (
                                 <li
                                     key={student.studentId}
-                                    className="flex justify-between items-center p-4 bg-gray-50 border rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                    className="flex justify-between items-center p-4 bg-white bg-opacity-30 backdrop-blur-lg rounded-lg shadow-md hover:scale-105 transition-transform"
                                 >
-                                    <span className="font-medium text-gray-700">{student.name}</span>
+                                    <span className="font-medium text-white text-lg">{student.name}</span>
                                     <div className="flex items-center space-x-4">
                                         <button
                                             onClick={() => handleAttendanceToggle(student.studentId)}
-                                            className={`relative w-16 h-8  rounded-full p-1 transition-colors duration-300 ${
-                                                student.present ? 'bg-green-500' : 'bg-red-500'
-                                            }`}
+                                            className={`relative w-16 h-8 rounded-full transition-all duration-300 border-2 border-white shadow-md
+                                                ${student.present ? 'bg-green-400' : 'bg-red-400'}`}
                                         >
                                             <div
-                                                className={`absolute w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                                                className={`absolute w-7 h-7 bg-white rounded-full shadow-lg transform transition-transform duration-300 ${
                                                     student.present ? 'translate-x-8' : 'translate-x-0'
                                                 }`}
                                             />
                                         </button>
                                         <span
-                                            className={`font-semibold ${
-                                                student.present ? 'text-green-600' : 'text-red-600'
+                                            className={`text-lg font-semibold ${
+                                                student.present ? 'text-green-300' : 'text-red-300'
                                             }`}
                                         >
-                                            {student.present ? 'Present' : 'Absent'}
+                                            {student.present ? '✔ Present' : '❌ Absent'}
                                         </span>
                                     </div>
                                 </li>
@@ -121,13 +91,13 @@ const AttendancePage = () => {
                         </ul>
                         <button
                             onClick={handleSubmit}
-                            className="mt-6 w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                            className="mt-6 w-full px-6 py-3 bg-blue-500 text-white text-lg font-semibold rounded-xl hover:bg-blue-600 transition-all"
                         >
-                            Submit
+                            ✅ Submit Attendance
                         </button>
                     </>
                 ) : (
-                    <p className="text-gray-500 text-center">Loading...</p>
+                    <p className="text-white text-center">Loading...</p>
                 )}
             </div>
         </div>

@@ -72,13 +72,14 @@ const StudentDashboard = () => {
 
         {/* Classroom-wise Attendance Section */}
         <div className="mb-5  w-full p-6 ">
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-yellow-200">Attendance Chart</h2>
           <ClassroomWiseAttendance />
         </div>
 
         {/* Notifications Section */}
         <section className="w-full">
-          <h2 className="text-3xl font-semibold text-center mb-6 text-yellow-200">Classroom Notifications</h2>
-          <div className="bg-gray-100 p-6 rounded-xl shadow-md text-center">
+          <div className="p-6 text-center">
+          <h2 className="text-3xl font-extrabold text-center mb-6 text-yellow-200">Classroom Notifications</h2>
             {/* Notification Component */}
             <Notifications />
           </div>

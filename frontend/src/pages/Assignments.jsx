@@ -45,7 +45,7 @@ const Assignments = () => {
             });
             alert("File submitted successfully!");
 
-            // Update the assignment status to "Submitted" in the UI
+            // Update the assignment status in UI
             setAssignments((prevAssignments) =>
                 prevAssignments.map((assignment) =>
                     assignment._id === assignmentId ? { ...assignment, isSubmitted: true } : assignment
@@ -58,44 +58,50 @@ const Assignments = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-4 bg-white rounded shadow-md mt-20">
-            <h2 className="text-2xl font-bold mb-4 text-center">Assignments for Classroom ID: {classroomId}</h2>
-            <p className="text-lg"><strong>Student ID:</strong> {studentId}</p>
+        <div className="min-h-screen bg-gradient-to-r from-purple-700 via-purple-200 to-blue-600 flex flex-col items-center p-6 mt-16">
+        <div className="max-w-3xl mx-auto p-6 bg-white/20 backdrop-blur-lg rounded-lg shadow-lg mt-10 mb-12">
+            <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-700">
+            ___________📚 Assignments To be Done_____________
+            </h2>
+            {/* <p className="text-lg text-gray-600 text-center mb-4">
+                <strong className="text-blue-600">Student ID:</strong> {studentId}
+            </p> */}
             {loading ? (
-                <p className="text-center">Loading assignments...</p>
+                <p className="text-center text-gray-500">Loading assignments...</p>
             ) : (
                 assignments.length > 0 ? (
-                    <ul className="space-y-4">
+                    <ul className="space-y-6">
                         {assignments.map((assignment) => (
-                            <li key={assignment._id} className="border-b pb-4">
-                                <h3 className="text-xl font-semibold">{assignment.title}</h3>
-                                <p className="text-md"><strong>Due Date:</strong> {new Date(assignment.dueDate).toLocaleDateString()}</p>
-                                <p className="text-md"><strong>Grade:</strong> {assignment.grade || "Not graded"}</p>
-                                <p className="text-md"><strong>Feedback:</strong> {assignment.feedback || "No feedback yet"}</p>
-                                <p className="text-md">
-                                    <strong>Status:</strong> {assignment.isSubmitted ? "Submitted" : "Unsubmitted"}
+                            <li key={assignment._id} className="p-5 bg-blue-100 rounded-lg shadow-md hover:shadow-lg transition">
+                                <h3 className="text-xl font-semibold text-gray-800">{assignment.title}</h3>
+                                <p className="text-md text-gray-600"><strong>📅 Due Date:</strong> {new Date(assignment.dueDate).toLocaleDateString()}</p>
+                                <p className="text-md text-gray-600"><strong>🏅 Grade:</strong> {assignment.grade || "Not graded"}</p>
+                                <p className="text-md text-gray-600"><strong>💬 Feedback:</strong> {assignment.feedback || "No feedback yet"}</p>
+                                <p className="text-md font-medium">
+                                    <strong>📌 Status:</strong> 
+                                    <span className={`ml-2 px-3 py-1 text-white text-sm rounded-full ${assignment.isSubmitted ? 'bg-green-500' : 'bg-red-500'}`}>
+                                        {assignment.isSubmitted ? "Submitted" : "Unsubmitted"}
+                                    </span>
                                 </p>
-                                {console.log(assignment)}
                                 {assignment.fileUrl && (
                                     <a
                                         href={assignment.fileUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-block mt-2 bg-blue-600 text-white px-4 py-2 rounded"
+                                        className="mt-3 inline-block text-blue-700 font-semibold hover:underline"
                                         download
                                     >
-                                        Download Assignment
+                                        ⬇️ Download Assignment
                                     </a>
                                 )}
-                                {/* Show submission button only if the assignment is unsubmitted */}
                                 {!assignment.isSubmitted && (
-                                    <div className="mt-4">
-                                        <input type="file" onChange={handleFileChange} />
+                                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                                        <input type="file" onChange={handleFileChange} className="border rounded px-3 py-2" />
                                         <button
                                             onClick={() => handleFileSubmit(assignment._id)}
-                                            className="inline-block mt-2 bg-green-600 text-white px-4 py-2 rounded"
+                                            className="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-lg transition"
                                         >
-                                            Submit Assignment
+                                            🚀 Submit Assignment
                                         </button>
                                     </div>
                                 )}
@@ -103,9 +109,10 @@ const Assignments = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-center">No assignments found for this classroom.</p>
+                    <p className="text-center text-gray-500">No assignments found for this classroom.</p>
                 )
             )}
+        </div>
         </div>
     );
 };

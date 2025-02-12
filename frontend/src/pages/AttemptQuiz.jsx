@@ -4,8 +4,8 @@ import axios from "axios";
 import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
 import { FaClock } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";  // Import toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
+import { toast, ToastContainer } from "react-toastify";  
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const QuizAttemptPage = () => {
     const { quizId } = useParams();
@@ -18,23 +18,20 @@ const QuizAttemptPage = () => {
     const [score, setScore] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [quizHide, setQuizHide] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(null); // Initialize as null, will be set after fetching the quiz
-    const [timerActive, setTimerActive] = useState(false); // Whether the timer is running or not
-    const [isSubmitted, setIsSubmitted] = useState(false); // Track whether the quiz is submitted
+    const [timeLeft, setTimeLeft] = useState(null);
+    const [timerActive, setTimerActive] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
                 const response = await fetch(`${BASE_URL}/quiz/${quizId}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                
                 const data = await response.json();
                 setQuiz(data);
-
-                // Initialize the timer after quiz data is fetched
-                setTimeLeft(data.duration * 60); // Duration in seconds (assuming duration is in minutes)
-                setTimerActive(true); // Start the timer once data is fetched
+                setTimeLeft(data.duration * 60);
+                setTimerActive(true);
             } catch (error) {
                 console.error("Error fetching quiz:", error);
                 setError("Failed to load quiz. Please try again.");
@@ -48,16 +45,11 @@ const QuizAttemptPage = () => {
     useEffect(() => {
         let timerInterval;
         if (timerActive && timeLeft !== null && timeLeft > 0) {
-            // Set an interval to update the timer every second
-            timerInterval = setInterval(() => {
-                setTimeLeft((prevTime) => prevTime - 1);
-            }, 1000);
+            timerInterval = setInterval(() => setTimeLeft((prevTime) => prevTime - 1), 1000);
         } else if (timeLeft === 0) {
-            // Automatically submit the quiz when time runs out
             handleSubmit();
         }
-
-        return () => clearInterval(timerInterval); // Cleanup the interval when the component unmounts or timer stops
+        return () => clearInterval(timerInterval);
     }, [timeLeft, timerActive]);
 
     const handleAnswerChange = (questionIndex, selectedOption) => {
@@ -74,89 +66,96 @@ const QuizAttemptPage = () => {
             });
 
             setScore(response.data.score);
-            setQuizHide(true); // Hide the quiz once submitted
-            setIsSubmitted(true); // Mark quiz as submitted
-
-            // Show a success toast notification
-            toast.success("Quiz submitted successfully!", { autoClose: 3000 });
+            setQuizHide(true);
+            setIsSubmitted(true);
+            toast.success("🎉 Quiz submitted successfully!", { autoClose: 3000 });
         } catch (error) {
             console.error("Error submitting quiz:", error);
-            toast.error("Failed to submit quiz. Please try again.", { autoClose: 3000 }); // Show error toast
+            toast.error("❌ Failed to submit quiz. Please try again.", { autoClose: 3000 });
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const navigatetoQuiz = async () => {
-        navigate('/quizzes');
-    }
+    const navigatetoQuiz = () => navigate('/quizzes');
 
-    if (loading) return <p className="text-center mt-20 text-lg font-semibold">Loading quiz...</p>;
-    if (error) return <p className="text-center mt-20 text-red-600">{error}</p>;
+    if (loading) return <p className="text-center mt-20 text-lg font-semibold text-white">⏳ Loading quiz...</p>;
+    if (error) return <p className="text-center mt-20 text-red-500">{error}</p>;
 
     return (
-        <div className="max-w-3xl mx-auto mt-24 p-8 bg-white rounded-lg shadow-lg border">
-            <h2 className="text-3xl font-bold mb-6 text-center">{quiz.quizTitle}</h2>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-200 via-purple-100 to-blue-300 mt-20 p-6">
+            <div className="relative z-10 w-full max-w-3xl bg-blue-900 shadow-2xl rounded-2xl p-8 border border-white/30 text-white mt-5">
+                <h2 className="text-4xl font-extrabold text-center text-yellow-300 drop-shadow-lg">{quiz.quizTitle}</h2>
 
-            {/* Timer display - Only show if quiz is not submitted */}
-            {!isSubmitted && timeLeft !== null && (
-                <div className="text-center mb-6">
-                    <p className="text-lg font-semibold flex items-center justify-center gap-2 text-gray-700">
-                        <FaClock className="text-yellow-500" />
-                        <span className="text-xl text-blue-600">
-                            Time Remaining: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
-                        </span>
-                    </p>
-                </div>
-            )}
-
-            {!quizHide && quiz.questions.map((question, index) => (
-                <div key={index} className="mb-6 p-4 bg-gray-100 rounded-lg">
-                    <p className="font-semibold mb-2">{index + 1}. {question.text}</p>
-                    <div className="flex flex-col gap-2">
-                        {question.options.map((option, optIndex) => (
-                            <label
-                                key={optIndex}
-                                className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition ${
-                                    answers[index] === option
-                                        ? "bg-green-100 border border-green-500"
-                                        : "hover:bg-gray-200"
-                                }`}
-                            >
-                                <input
-                                    type="radio"
-                                    name={`question-${index}`}
-                                    value={option}
-                                    onChange={() => handleAnswerChange(index, option)}
-                                    className="cursor-pointer"
-                                />
-                                {option}
-                            </label>
-                        ))}
+                {/* Timer */}
+                {!isSubmitted && timeLeft !== null && (
+                    <div className="text-center mt-4">
+                        <p className="text-lg font-semibold flex items-center justify-center gap-2">
+                            <FaClock className="text-yellow-500 animate-pulse" />
+                            <span className={`text-xl font-bold ${
+                                timeLeft <= 60 ? "text-red-400" : "text-green-300"
+                            }`}> Time left
+                                ⏳ {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+                            </span>
+                        </p>
                     </div>
-                </div>
-            ))}
+                )}
 
-            {score !== null ? (
-                <div className="text-center mt-6">
-                    <p className="text-xl font-bold text-green-600">Your Score: {score} / {quiz.questions.length}</p>
-                    <p className="text-xl font-bold text-green-600">Your Score has been updated on the leaderBoard, please check it</p>
-                    <button className="w-full mt-6 py-3 text-white text-lg font-semibold rounded-md transition bg-green-600 hover:bg-green-700" onClick={navigatetoQuiz}>Go back to Quiz</button>
-                </div>
-            ) : (
-                <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className={`w-full mt-6 py-3 text-white text-lg font-semibold rounded-md transition ${
-                        isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
-                    }`}
-                >
-                    {isSubmitting ? "Submitting..." : "Submit Quiz"}
-                </button>
-            )}
+                {/* Questions */}
+                {!quizHide && quiz.questions.map((question, index) => (
+                    <div key={index} className="mb-6 mt-6 p-4 bg-white/20 border border-white/30 rounded-xl shadow-lg">
+                        <p className="font-semibold text-yellow-300 mb-2">{index + 1}. {question.text}</p>
+                        <div className="flex flex-col gap-2">
+                            {question.options.map((option, optIndex) => (
+                                <label
+                                    key={optIndex}
+                                    className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
+                                        answers[index] === option
+                                            ? "bg-green-100 border border-green-500 text-black"
+                                            : "hover:bg-white/30"
+                                    }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name={`question-${index}`}
+                                        value={option}
+                                        onChange={() => handleAnswerChange(index, option)}
+                                        className="cursor-pointer"
+                                    />
+                                    {option}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                ))}
 
-            {/* ToastContainer for displaying notifications */}
-            <ToastContainer />
+                {/* Score Display */}
+                {score !== null ? (
+                    <div className="text-center mt-6">
+                        <p className="text-xl font-bold text-green-400">🎯 Your Score: {score} / {quiz.questions.length}</p>
+                        <p className="text-lg font-bold text-green-300">🏆 Updated on the Leaderboard!</p>
+                        <button 
+                            className="w-full mt-6 py-3 bg-green-500 text-white text-lg font-semibold rounded-md transition hover:bg-green-600"
+                            onClick={navigatetoQuiz}
+                        >
+                            📜 Go back to Quizzes
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
+                        className={`w-full mt-6 py-3 text-white text-lg font-semibold rounded-md transition-all ${
+                            isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+                        }`}
+                    >
+                        {isSubmitting ? "Submitting..." : "🚀 Submit Quiz"}
+                    </button>
+                )}
+
+                {/* Toast Notifications */}
+                <ToastContainer />
+            </div>
         </div>
     );
 };

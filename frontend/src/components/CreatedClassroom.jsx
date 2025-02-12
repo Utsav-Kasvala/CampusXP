@@ -50,12 +50,12 @@ const CreatedClasses = () => {
   };
 
   return (
-     <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-indigo-900 to-blue-700">
-    <div className="relative z-10 w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-95">
-        <h1 className="text-4xl font-extrabold text-blue-700 mb-6 text-center">Created Classes</h1>
-        <div className="text-lg font-medium mb-4 text-center">
-          <p className="text-gray-700">Professor ID: {user.professorId || professorId}</p>
-          <p className="text-gray-700">Professor Name: {user.name || "Not Available"}</p>
+     <div className="relative min-h-screen flex flex-col items-center p-6 mt-20 overflow-hidden bg-gradient-to-r from-purple-900 to-blue-100">
+    <div className="relative z-10 w-full max-w-3xl shadow-2xl rounded-2xl p-8 backdrop-blur-md bg-opacity-100">
+        <h1 className="text-4xl font-extrabold text-yellow-200 mb-6 text-center">Created Classes</h1>
+        <div className="text-2xl font-medium mb-4 text-center">
+          {/* <p className="text-gray-700">Professor ID: {user.professorId || professorId}</p> */}
+          <p className="font-extrabold text-orange-200 ">Professor Name: {user.name || "Not Available"}</p>
         </div>
 
         {error && (
@@ -69,7 +69,7 @@ const CreatedClasses = () => {
             {classrooms.map((classroom) => (
               <li
                 key={classroom._id}
-                className="p-6 border border-gray-200 rounded-lg shadow-md bg-gray-50 transition-transform transform hover:scale-105 hover:shadow-xl"
+                className="p-6 border border-gray-200 rounded-lg shadow-md bg-blue-100 transition-transform transform hover:scale-105 hover:shadow-xl"
               >
                 <div className="mb-4">
                   <Link
@@ -81,11 +81,11 @@ const CreatedClasses = () => {
                   <p className="mt-2 text-gray-700">
                     <strong>Credits:</strong> {classroom.credits}
                   </p>
-                  <p className="text-gray-700">
+                  {/* <p className="text-gray-700">
                     <strong>Join Code:</strong> {classroom.joinCode}
-                  </p>
+                  </p> */}
                 </div>
-                <div className="flex flex-wrap gap-4 bg-gray-100 p-4 rounded-md">
+                <div className="flex flex-wrap gap-4 bg-purple-100 p-4 rounded-md">
                   <button
                     onClick={() => handleTakeAttendance(classroom.joinCode)}
                     className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md transition-all hover:bg-green-700 hover:shadow-lg"
