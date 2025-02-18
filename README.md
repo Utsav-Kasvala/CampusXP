@@ -44,12 +44,10 @@ CampusXP is a full-stack web application for academic management. It provides a 
 
 ## Technologies Used
 
-- **Frontend:**  
-  ![React Logo](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)  
+- **Frontend:**   ![React Logo](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)  
   React, React Router, Context API, Tailwind CSS, Vite.
 
-- **Backend:**  
-  ![Node.js Logo](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)  
+- **Backend:**  ![Node.js Logo](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)  
   Node.js, Express, MongoDB, dotenv, Cloudinary.
 
 ---
