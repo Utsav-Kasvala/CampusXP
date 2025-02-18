@@ -34,10 +34,7 @@ CampusXP is a full-stack web application for academic management. It provides a 
 - **Real-time Communication:**  
   Join conference calls to enable direct communication between professors and students.
 
-- **Password Management:**  
-  Includes routes for password recovery and reset.
-
-- **Extra Tools:**  
+- **TimeTable and Leaderboard**  
   Leaderboard tracking and timetable management for efficient academic scheduling.
 
 ---
